@@ -1,18 +1,27 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap");
 @import "tailwindcss";
 
+/* 
+  Define custom theme variables for Tailwind v4 
+  These will automatically create utility classes like:
+  bg-primary, text-primary, border-primary, etc.
+*/
 @theme {
-  --color-primary: #f84565;
-  --color-primary-dull: #d63854;
+  --color-primary: #f84565;       /* Bright pink-red (brand color) */
+  --color-primary-dull: #d63854;  /* Slightly darker variation */
 }
 
+/* Global styles applied to all elements */
 * {
-  font-family: "Outfit", sans-serif;
-  scrollbar-width: thin;
-  scrollbar-color: #787777 #1e1e1e ;
+  font-family: "Outfit", sans-serif; /* Set Outfit as the default font */
+  
+  /* Firefox-browser-only custom scrollbar */
+  scrollbar-width: thin;                  /* Make scrollbar thinner */
+  scrollbar-color: #787777 #1e1e1e;       /* Thumb color + Track color */
 }
 
-body{
-  color: white;
-  background-color: #09090B;
+/* Styles applied to the body (page background + default text) */
+body {
+  color: white;                 /* Default text color */
+  background-color: #09090B;    /* Dark background */
 }
