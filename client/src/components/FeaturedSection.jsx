@@ -22,8 +22,9 @@ const FeaturedSection = () => {
         </button>
       </div>
 
-      {/* your movie cards will go here */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 mt-8 justify-items-center">
+      {/* your movie cards will go here (improve the styling from gird to flex box(responsiveness issue) 1.32.18) */}
+        <div className="flex flex-wrap max-sm:justify-center gap-8
+    mt-8">
         {dummyShowsData.slice(0, 4).map((show) => (
             <MovieCard key={show._id} movie={show} />
         ))}

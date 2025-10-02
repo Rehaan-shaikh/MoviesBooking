@@ -16,6 +16,7 @@ const TrailersSection = () => {
 
       <div className="relative mt-6">
         <BlurCircle top="-100px" right="-100px" />
+        {/* If your <ReactPlayer /> component doesn't show the YouTube video even though everything seems correct — it's likely because you're using react-player version 3.x, which introduced breaking changes.✅ Fix: Downgrade to the version used in this tutorial: npm install react-player@2.10.1 */}
         <ReactPlayer
         url={currentTrailer.videoUrl}
         controls={true}

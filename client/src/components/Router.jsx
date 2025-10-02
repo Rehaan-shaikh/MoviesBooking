@@ -21,7 +21,8 @@ const router = createBrowserRouter(
       {/* Default (index) route → loads Home when path is exactly "/" */}
       <Route index element={<Home />} />
       <Route path="movies" element={<Movies />} />
-      <Route path=":id" element={<MovieDetails />} />
+      {/* later try to make another outlet for movies */}
+      <Route path="movies/:id" element={<MovieDetails />} />
       <Route path=":date" element={<SeatLayout />} />
       <Route path="my-bookings" element={<MyBookings />} />
       <Route path="favorite" element={<Favorite />} />

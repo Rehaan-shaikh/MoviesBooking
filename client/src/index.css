@@ -27,3 +27,7 @@ body {
   color: white;                 /* Default text color */
   background-color: #09090B;    /* Dark background */
 }
+
+.no-scrollbar{
+  scrollbar-width: none;
+}
