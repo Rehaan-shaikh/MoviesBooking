@@ -5,11 +5,12 @@ import Footer from "../components/Footer";
 
 const RootLayout = () => {
     const isAdminRoute = useLocation().pathname.startsWith("/admin")
+    const isLoginRout = useLocation().pathname.startsWith("/login")
   return (
     <>
-      {!isAdminRoute && <Navbar />}
+      {(!isAdminRoute && !isLoginRout) && <Navbar />}
       <Outlet />
-      {!isAdminRoute && <Footer />}
+      {(!isAdminRoute && !isLoginRout) && <Footer />}
     </>
   );
 };
