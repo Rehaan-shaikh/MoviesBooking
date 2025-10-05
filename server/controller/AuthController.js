@@ -61,7 +61,25 @@ export const login = async (req, res) => {
   }
 };
 
-// export const logout = (req, res) => {
-//   res.clearCookie("token");
-//   res.status(200).json({ message: "Logged out successfully" });
-// };
+export const logout = (req, res) => {
+  res.clearCookie("token");
+  res.status(200).json({ message: "Logged out successfully" });
+};
+
+
+export const checkAuth = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return res.status(401).json({ message: "Not authenticated" });
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) return res.status(401).json({ message: "User not found" });
+
+    res.status(200).json({ message: "Authenticated", user });
+  } catch (err) {
+    console.log(err);
+    res.status(401).json({ message: "Not authenticated" });
+  }
+};

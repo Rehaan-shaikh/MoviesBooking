@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import BlurCircle from '../components/BlurCircle.jsx';
 import { assets } from '../assets/assets.js';
+import { useDispatch } from "react-redux";
+import { loginUser, signupUser } from '../store/authSlice/index.js';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -11,6 +13,7 @@ const Auth = () => {
     password: '',
   });
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -20,18 +23,41 @@ const Auth = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  try {
     if (isLogin) {
-      console.log('Attempting to log in with:', { email: formData.email, password: formData.password });
-      // TODO: Add your login API call logic here
+      const data = await dispatch(loginUser(formData));
+
+      if (data?.payload?.status === 200) {
+        alert("Login Success");
+        navigate("/");
+      } else {
+        console.log(data);
+        
+        alert(data?.payload?.message || "Login Failed");
+      }
     } else {
-      console.log('Attempting to sign up with:', formData);
-      // TODO: Add your signup API call logic here
+      const data = await dispatch(signupUser(formData));
+
+      if (data?.payload?.status === 201) {
+        alert("Signup Success");
+        navigate("/");
+      } else {
+        alert(data?.payload?.message || "Signup Failed");
+        console.log(data);
+        
+      }
     }
-    // On successful authentication, you can navigate the user
-    // navigate('/');
-  };
+  } catch (error) {
+    console.error("Error in handleSubmit:", error);
+    alert("Something went wrong! Check console for details.");
+  }
+};
+
+
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-cover bg-center bg-[url('/backgroundImage.png')] p-4">
@@ -133,4 +159,7 @@ const Auth = () => {
 };
 
 export default Auth;
+
+
+
 

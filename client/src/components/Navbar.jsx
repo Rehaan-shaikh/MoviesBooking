@@ -2,12 +2,20 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { MenuIcon, SearchIcon, TicketPlus, XIcon } from "lucide-react";
 import { assets } from "../assets/assets.js";
+import { logoutUser } from "../store/authSlice/index.js";
+import { useDispatch } from "react-redux";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   // You can integrate user state here later
   const user = null;
+    const handleLogout = () => {
+    dispatch(logoutUser()).then(() => {
+      navigate("/login"); // redirect to login after logout
+    });
+  };
 
   return (
     <div className="fixed top-0 left-0 z-50 w-full flex items-center justify-between px-6 md:px-16 lg:px-36 py-5">
@@ -84,7 +92,12 @@ const Navbar = () => {
           <div>{/* Placeholder for UserButton or profile icon */}</div>
         )}
       </div>
-
+      <button
+            onClick={handleLogout}
+            className="px-4 py-1 sm:px-7 sm:py-2 bg-red-600 hover:bg-red-700 transition rounded-full font-medium cursor-pointer"
+          >
+            Logout
+      </button>
       <MenuIcon
         className="max-md:ml-4 md:hidden w-8 h-8 cursor-pointer"
         onClick={() => setIsOpen(!isOpen)}

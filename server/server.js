@@ -11,7 +11,11 @@ const port = 3000;
 await connectDB();
 
 //middleware
-app.use(cors());
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true,
+}));
+
 app.use(express.json());
 app.use(cookieParser());
 
