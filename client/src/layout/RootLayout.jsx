@@ -4,13 +4,13 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
 const RootLayout = () => {
-    const isAdminRoute = useLocation().pathname.startsWith("/admin")
-    const isLoginRout = useLocation().pathname.startsWith("/login")
+    const location = useLocation();
+    const isAuthRoute = location.pathname.startsWith("/login");
   return (
     <>
-      {(!isAdminRoute && !isLoginRout) && <Navbar />}
+      {!isAuthRoute && <Navbar />}
       <Outlet />
-      {(!isAdminRoute && !isLoginRout) && <Footer />}
+      {!isAuthRoute && <Footer />}
     </>
   );
 };
