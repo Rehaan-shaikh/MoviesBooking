@@ -53,10 +53,10 @@ const AdminSidebar = () => {
         // src={user.imageUrl}
         alt="sidebar"
       />
-      <p className="flex flex-col items-center justify-center mt-2 text-base max-md:hidden">
+      <div className="flex flex-col items-center justify-center mt-2 text-base max-md:hidden">
         <div>{user.name.split(" ")[0]}</div>
         <div> {user.email}</div>
-      </p>
+      </div>
 
       <div className="w-full">
         {adminNavLinks.map((link, index) => (

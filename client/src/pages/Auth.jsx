@@ -117,7 +117,7 @@ const handleSubmit = async (e) => {
             />
           </div>
           <div>
-            <label htmlFor="password" a className="text-sm font-medium text-gray-300">
+            <label htmlFor="password" className="text-sm font-medium text-gray-300">
               Password
             </label>
             <input
