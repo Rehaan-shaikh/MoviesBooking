@@ -35,7 +35,7 @@ const handleSubmit = async (e) => {
         alert("Login Success");
         navigate("/");
       } else {
-        console.log(data);
+        // console.log(data);
         
         alert(data?.payload?.message || "Login Failed");
       }
@@ -47,7 +47,7 @@ const handleSubmit = async (e) => {
         navigate("/");
       } else {
         alert(data?.payload?.message || "Signup Failed");
-        console.log(data);
+        // console.log(data);
         
       }
     }

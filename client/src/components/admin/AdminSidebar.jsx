@@ -1,47 +1,106 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Film, Ticket, PlusSquare, Home } from 'lucide-react';
-import { assets } from '../../assets/assets.js';
+import React from 'react'
+import { useDispatch, useSelector } from "react-redux";
+import {
+  LayoutDashboardIcon,
+  ListCollapseIcon,
+  ListIcon,
+  PlusSquareIcon,
+  Search,
+} from "lucide-react";
+// import { assets } from "../../assets/assets";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { checkAuth, logoutUser } from '../../store/authSlice';
+
 
 const AdminSidebar = () => {
-  const navLinkClasses = ({ isActive }) =>
-    `flex items-center gap-3 px-4 py-3 rounded-lg transition-colors ${
-      isActive
-        ? 'bg-primary text-white'
-        : 'text-gray-300 hover:bg-gray-700'
-    }`;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      dispatch(checkAuth());
+    }, [dispatch]);
+
+  const {user } = useSelector((state) => state.auth);
+
+    const handleLogout =async ()=> {
+    await dispatch(logoutUser()).then(() => {
+      navigate("/login"); // redirect to login after logout
+      window.location.reload();
+    });
+  };
+  const adminNavLinks = [
+    { name: "Dashboard", path: "/admin", icon: LayoutDashboardIcon },
+    { name: "Add Shows", path: "/admin/add-shows", icon: PlusSquareIcon },
+    { name: "List Shows", path: "/admin/list-shows", icon: ListIcon },
+    {
+      name: "List Bookings",
+      path: "/admin/list-bookings",
+      icon: ListCollapseIcon,
+    },
+    { name: "Search Movies", path: "/admin/Search", icon: Search },
+
+  ];
 
   return (
-    <div className="w-64 bg-[#1A1A1A] text-white h-screen flex flex-col p-4 border-r border-gray-700">
-      <div className="flex items-center gap-2 p-4 mb-8">
-        <img src={assets.logo} alt="Logo" className="w-32" />
+    <div
+      className="h-[calc(100vh-64px)] md:flex flex-col items-center pt-8 
+        max-w-13 md:max-w-60 w-full border-r border-gray-300/20 text-sm" 
+    >
+      <div className='h-[78vh]'>
+              <img
+        className="h-9 md:h-14 w-9 md:w-14 rounded-full mx-auto"
+        // src={user.imageUrl}
+        alt="sidebar"
+      />
+      <p className="flex flex-col items-center justify-center mt-2 text-base max-md:hidden">
+        <div>{user.name.split(" ")[0]}</div>
+        <div> {user.email}</div>
+      </p>
+
+      <div className="w-full">
+        {adminNavLinks.map((link, index) => (
+          <NavLink
+            key={index}
+            to={link.path}
+            end
+            className={({ isActive }) =>
+              "relative flex items-center gap-2 w-full py-2.5 min-md:pl-10 " +
+              (index === 0 ? "first:mt-6 " : "") +
+              "text-gray-400 group " +
+              (isActive ? "text-primary bg-primary/15" : "")
+            }
+          >
+            {({ isActive }) => (
+              <>
+                <link.icon className="w-5 h-5" />
+                <p className="max-md:hidden">{link.name}</p>
+
+                <span
+                  className={
+                    "w-1.5 h-10 rounded-l-1 right-0 absolute " +
+                    (isActive && "bg-primary")
+                  }
+                />
+              </>
+            )}
+          </NavLink>
+
+        ))}
       </div>
-      <nav className="flex flex-col gap-2">
-        <NavLink to="/admin" end className={navLinkClasses}>
-          <LayoutDashboard size={20} />
-          <span>Dashboard</span>
-        </NavLink>
-        <NavLink to="/admin/shows" className={navLinkClasses}>
-          <Film size={20} />
-          <span>Shows</span>
-        </NavLink>
-        <NavLink to="/admin/bookings" className={navLinkClasses}>
-          <Ticket size={20} />
-          <span>Bookings</span>
-        </NavLink>
-        <NavLink to="/admin/add-show" className={navLinkClasses}>
-          <PlusSquare size={20} />
-          <span>Add Show</span>
-        </NavLink>
-        <hr className="my-4 border-gray-700" />
-        <NavLink to="/" className={navLinkClasses}>
-            <Home size={20} />
-            <span>Back to Home</span>
-        </NavLink>
-      </nav>
+      </div>
+
+      <div>
+        <button
+              onClick={handleLogout}
+              className="text-primary hover:text-primary-dull  px-4 py-1 sm:px-6 sm:py-2 bg-primary/15  transition rounded-full font-medium cursor-pointer"
+              >
+              Logout
+            </button>
+      </div>
     </div>
+              
   );
 };
 
 export default AdminSidebar;
-

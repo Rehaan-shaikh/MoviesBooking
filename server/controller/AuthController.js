@@ -75,6 +75,9 @@ export const checkAuth = async (req, res) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.id).select("-password");
+    //.select("-password") means:
+    // "Fetch the user document, but don’t include the password field in the result."
+    //cause of security reasons , as u r sending user to the frontend
     if (!user) return res.status(401).json({ message: "User not found" });
 
     res.status(200).json({ message: "Authenticated", user });
