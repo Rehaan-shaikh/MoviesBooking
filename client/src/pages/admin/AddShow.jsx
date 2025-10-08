@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { dummyShowsData } from "../../assets/assets";
 import { CheckIcon, DeleteIcon, Loader, StarIcon } from "lucide-react";
 import Title from "./component/Title";
 import { kConverter } from "../../Lib/kConverter";
@@ -8,7 +7,8 @@ import axios from "axios";
 const AddShow = () => {
 
 
-  const currency = import.meta.env.VITE_CURRENCY;
+  // const currency = import.meta.env.VITE_CURRENCY;
+
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [dateTimeSelection, setDateTimeSelection] = useState({});
@@ -16,18 +16,31 @@ const AddShow = () => {
   const [showPrice, setShowPrice] = useState("");
 
   const fetchNowPlayingMovies = async () => {
-    // await axios
-    //   .get("http://localhost:3000/api/show/now-playing")
-    //   .then((response) => {
-    //     console.log(response);
-    //     //date dekko change karne ka tha mereko 
-    //     // setNowPlayingMovies(response.data); // store fetched data in state
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error fetching users:", error);
-    //   });
-    setNowPlayingMovies(dummyShowsData);
+    await axios
+      .get("http://localhost:3000/api/show/now-playing")
+      .then((response) => {
+        console.log(response);
+        //date dekko change karne ka tha mereko 
+        setNowPlayingMovies(response.data?.movies || []); // store fetched data in state
+        console.log(nowPlayingMovies);
+      })
+      .catch((error) => {
+        console.error("Error fetching users:", error);
+      });
+    // setNowPlayingMovies(dummyShowsData);
   };
+  
+//   const fetchNowPlayingMovies = async () => {
+//   try {
+//     const response = await axios.get("http://localhost:3000/api/show/now-playing");
+//     console.log("Full response:", response);
+//     console.log("response.data:", response.data);
+//     console.log("response.data.movies:", response.data.movies);
+//   } catch (error) {
+//     console.error("Error fetching movies:", error);
+//   }
+// };
+
 
   const handleDateTimeAdd = () => {
     if (!dateTimeInput) return;
@@ -42,6 +55,7 @@ const AddShow = () => {
       return prev;
     });
   };
+
   const handleRemoveTime = (date, time) => {
     setDateTimeSelection((prev) => {
       const filteredTimes = prev[date].filter((t) => t !== time);
@@ -57,8 +71,10 @@ const AddShow = () => {
       };
     });
   };
+
   useEffect(() => {
     fetchNowPlayingMovies();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return nowPlayingMovies.length > 0 ? (
@@ -77,7 +93,7 @@ const AddShow = () => {
             >
               <div className="relative rounded-lg overflow-hidden">
                 <img
-                  src={movie.poster_path}
+                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt=""
                   className="w-full object-cover brightness-90"
                 />
@@ -115,12 +131,13 @@ const AddShow = () => {
           ))}
         </div>
       </div>
+      
       {/* Show Price Input */}
       <div className="mt-8">
         <label className="block text-sm font-medium mb-2">Show Price</label>
         <div
           className="inline-flex items-center gap-2 border border-gray-600
-    px-3 py-2 rounded-md"
+          px-3 py-2 rounded-md"
         >
           <p className="text-gray-400 text-sm">$</p>
           <input
@@ -133,6 +150,7 @@ const AddShow = () => {
           />
         </div>
       </div>
+      
       {/* Date & Time Selection */}
       <div className="mt-6">
         <label className="block text-sm font-medium mb-2">
