@@ -13,72 +13,98 @@ const AddShow = () => {
   const [dateTimeSelection, setDateTimeSelection] = useState({});
   const [dateTimeInput, setDateTimeInput] = useState("");
   const [showPrice, setShowPrice] = useState("");
+  const [showsInput, setShowsInput] = useState([
+    {
+      date: "",
+      time: [],
+    },
+  ]);
 
   const fetchNowPlayingMovies = async () => {
     await axios
       .get("http://localhost:3000/api/show/now-playing")
       .then((response) => {
-        console.log(response);
-        //date dekko change karne ka tha mereko 
+        // console.log(response);
+        //date dekko change karne ka tha mereko
         setNowPlayingMovies(response.data?.movies || []); // store fetched data in state
-        console.log(nowPlayingMovies);
+        // console.log(nowPlayingMovies);
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
     // setNowPlayingMovies(dummyShowsData);
   };
-  
-// const fetchNowPlayindgMovies = async () => {
-//   try {
-//     const response = await axios.get("http://localhost:3000/api/show/now-playing");
-//     console.log("Full response:", response);
-//     console.log("response.data:", response.data);
-//     console.log("response.data.movies:", response.data.movies);
-//   } catch (error) {
-//     console.error("Error fetching movies:", error);
-//   }
-// };
 
-
-const handleDateTimeAdd = () => {
-  if (!dateTimeInput) return;
-  const [date, time] = dateTimeInput.split("T");
-  if (!date || !time) return;
-
-  setDateTimeSelection((prev) => {
-    const times = prev[date] || [];  //times is an array of time for a perticular date
-    if (!times.includes(time)) {
-      return { ...prev, [date]: [...times, time] };
+  const handleAddShow = async () => {
+    // const isFieldEmpty = movieId && dateTimeSelection && showPrice;
+    // if(!isFieldEmpty) return alert("Enter All Information To Add a Show")
+    try {
+      const payload = {
+        movieId: selectedMovie,
+        showsInput: showsInput,
+        showPrice: showPrice,
+      };
+      if (!payload) return alert("Enter All Information To Add a Show");
+      const res = await axios.post(
+        "http://localhost:3000/api/show/addShow",
+        payload
+      ); // your backend URL
+      console.log("Response:", res.data);
+    } catch (error) {
+      console.error("Error while Adding Show", error);
     }
-    return prev;  //if time for a perticular date exist, then dont do (add) anything
-  });
+  };
+
+  // const fetchNowPlayindgMovies = async () => {
+  //   try {
+  //     const response = await axios.get("http://localhost:3000/api/show/now-playing");
+  //     console.log("Full response:", response);
+  //     console.log("response.data:", response.data);
+  //     console.log("response.data.movies:", response.data.movies);
+  //   } catch (error) {
+  //     console.error("Error fetching movies:", error);
+  //   }
+  // };
+
+  const handleDateTimeAdd = () => {
+    if (!dateTimeInput) return;
+    const [date, time] = dateTimeInput.split("T");
+    if (!date || !time) return;
+
+    setDateTimeSelection((prev) => {
+      const times = prev[date] || []; //times is an array of time for a perticular date
+      if (!times.includes(time)) {
+        return { ...prev, [date]: [...times, time] };
+      }
+      return prev; //if time for a perticular date exist, then dont do (add) anything
+    });
   };
   //Dummy dateTimeSelection data
-//   dateTimeSelection = {
-//   "2025-10-09": ["18:30", "20:00"],
-//   "2025-10-10": ["17:15"],
-//   "2025-10-11": ["19:45"]
-// }
-
+  //   dateTimeSelection = {
+  //   "2025-10-09": ["18:30", "20:00"],
+  //   "2025-10-10": ["17:15"],
+  //   "2025-10-11": ["19:45"]
+  // }
 
   const handleRemoveTime = (date, time) => {
     setDateTimeSelection((prev) => {
       const filteredTimes = prev[date].filter((t) => t !== time);
 
-      if (filteredTimes.length === 0) {  //ie if a perticular date doesnt have any longer time of show, 
+      if (filteredTimes.length === 0) {
+        //ie if a perticular date doesnt have any longer time of show,
         //this below line then,
         // 1. [date] → dynamically uses the value of the variable date as a key.
         // So [date] becomes "2025-10-09".
         // 2. { [date]: _, ...rest } = prev
         // This destructures the object prev.
         // It extracts the property with key "2025-10-09" and assigns it to _ (we don’t need it, so _ is just a throwaway variable).
-        // ...rest collects all remaining properties of the object into a new objec 
+        // ...rest collects all remaining properties of the object into a new objec
         const { [date]: _, ...rest } = prev;
         return rest;
       }
 
-      return {  //it gets return if the data has some some time of show
+      return {
+        //it gets return if the data has some some time of show
         ...prev,
         [date]: filteredTimes,
       };
@@ -86,9 +112,17 @@ const handleDateTimeAdd = () => {
   };
 
   useEffect(() => {
+    const transformed = Object.keys(dateTimeSelection).map((key) => ({
+      date: key,
+      time: dateTimeSelection[key],
+    }));
+    setShowsInput(transformed);
+  }, [dateTimeSelection]);
+
+  useEffect(() => {
     fetchNowPlayingMovies();
     // fetchNowPlayindgMovies();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return nowPlayingMovies.length > 0 ? (
@@ -107,7 +141,7 @@ const handleDateTimeAdd = () => {
             >
               <div className="relative rounded-lg overflow-hidden">
                 <img
-                   src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                  src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                   alt=""
                   className="w-full object-cover brightness-90"
                 />
@@ -145,7 +179,7 @@ const handleDateTimeAdd = () => {
           ))}
         </div>
       </div>
-      
+
       {/* Show Price Input */}
       <div className="mt-8">
         <label className="block text-sm font-medium mb-2">Show Price</label>
@@ -192,33 +226,37 @@ const handleDateTimeAdd = () => {
         </div>
       </div>
 
-      {Object.keys(dateTimeSelection).length > 0 && (  //Object.keys returns an array of keys
+      {Object.keys(dateTimeSelection).length > 0 && ( //Object.keys returns an array of keys
         <div className="mt-6">
           <h2 className="mb-2">Selected Date-Time</h2>
           <ul className="space-y-3">
-            {Object.entries(dateTimeSelection).map(([date, times]) => (   //Object.entries() is a JavaScript method that returns an array of key-value pairs from an object.
-              <li key={date}>
-                <div className="font-medium">{date}</div>
-                <div className="flex flex-wrap gap-2 mt-1 text-sm">
-                  {times.map((time) => (
-                    <div
-                      key={time}
-                      className="border border-primary
+            {Object.entries(dateTimeSelection).map(
+              (
+                [date, times] //Object.entries() is a JavaScript method that returns an array of key-value pairs from an object.
+              ) => (
+                <li key={date}>
+                  <div className="font-medium">{date}</div>
+                  <div className="flex flex-wrap gap-2 mt-1 text-sm">
+                    {times.map((time) => (
+                      <div
+                        key={time}
+                        className="border border-primary
                   px-2 py-1 flex items-center rounded"
-                    >
-                      <span>{time}</span>
-                      <DeleteIcon
-                        onClick={() => handleRemoveTime(date, time)}
-                        width={15}
-                        className="ml-2
+                      >
+                        <span>{time}</span>
+                        <DeleteIcon
+                          onClick={() => handleRemoveTime(date, time)}
+                          width={15}
+                          className="ml-2
                     text-red-500 hover:text-red-700
                     cursor-pointer"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </li>
-            ))}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </li>
+              )
+            )}
           </ul>
         </div>
       )}
@@ -226,6 +264,7 @@ const handleDateTimeAdd = () => {
       <button
         className="bg-primary text-white px-8 py-2 mt-6 rounded
     hover:bg-primary/90 transition-all cursor-pointer"
+        onClick={handleAddShow}
       >
         Add Show
       </button>

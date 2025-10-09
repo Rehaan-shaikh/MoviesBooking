@@ -93,7 +93,7 @@ export const addShow = async (req, res) => {
     res.json({ success: true, message: "Shows added successfully" });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: error.message || "Shows added successfully" });
+    res.json({ success: false, message: error.message || "Shows not added successfully" });
   }
 };
 
