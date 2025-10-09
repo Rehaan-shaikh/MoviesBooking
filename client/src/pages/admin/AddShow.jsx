@@ -3,10 +3,9 @@ import { CheckIcon, DeleteIcon, Loader, StarIcon } from "lucide-react";
 import Title from "./component/Title";
 import { kConverter } from "../../Lib/kConverter";
 import axios from "axios";
-
+//REFER FOR UNDERSTANDING THIS CODE:
+// https://chatgpt.com/share/68e68f8a-ba18-8007-abd9-8a4a41ea9532
 const AddShow = () => {
-
-
   // const currency = import.meta.env.VITE_CURRENCY;
 
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
@@ -30,7 +29,7 @@ const AddShow = () => {
     // setNowPlayingMovies(dummyShowsData);
   };
   
-//   const fetchNowPlayingMovies = async () => {
+// const fetchNowPlayindgMovies = async () => {
 //   try {
 //     const response = await axios.get("http://localhost:3000/api/show/now-playing");
 //     console.log("Full response:", response);
@@ -42,30 +41,44 @@ const AddShow = () => {
 // };
 
 
-  const handleDateTimeAdd = () => {
-    if (!dateTimeInput) return;
-    const [date, time] = dateTimeInput.split("T");
-    if (!date || !time) return;
+const handleDateTimeAdd = () => {
+  if (!dateTimeInput) return;
+  const [date, time] = dateTimeInput.split("T");
+  if (!date || !time) return;
 
-    setDateTimeSelection((prev) => {
-      const times = prev[date] || [];
-      if (!times.includes(time)) {
-        return { ...prev, [date]: [...times, time] };
-      }
-      return prev;
-    });
+  setDateTimeSelection((prev) => {
+    const times = prev[date] || [];  //times is an array of time for a perticular date
+    if (!times.includes(time)) {
+      return { ...prev, [date]: [...times, time] };
+    }
+    return prev;  //if time for a perticular date exist, then dont do (add) anything
+  });
   };
+  //Dummy dateTimeSelection data
+//   dateTimeSelection = {
+//   "2025-10-09": ["18:30", "20:00"],
+//   "2025-10-10": ["17:15"],
+//   "2025-10-11": ["19:45"]
+// }
+
 
   const handleRemoveTime = (date, time) => {
     setDateTimeSelection((prev) => {
       const filteredTimes = prev[date].filter((t) => t !== time);
 
-      if (filteredTimes.length === 0) {
+      if (filteredTimes.length === 0) {  //ie if a perticular date doesnt have any longer time of show, 
+        //this below line then,
+        // 1. [date] → dynamically uses the value of the variable date as a key.
+        // So [date] becomes "2025-10-09".
+        // 2. { [date]: _, ...rest } = prev
+        // This destructures the object prev.
+        // It extracts the property with key "2025-10-09" and assigns it to _ (we don’t need it, so _ is just a throwaway variable).
+        // ...rest collects all remaining properties of the object into a new objec 
         const { [date]: _, ...rest } = prev;
         return rest;
       }
 
-      return {
+      return {  //it gets return if the data has some some time of show
         ...prev,
         [date]: filteredTimes,
       };
@@ -74,6 +87,7 @@ const AddShow = () => {
 
   useEffect(() => {
     fetchNowPlayingMovies();
+    // fetchNowPlayindgMovies();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -150,7 +164,7 @@ const AddShow = () => {
           />
         </div>
       </div>
-      
+
       {/* Date & Time Selection */}
       <div className="mt-6">
         <label className="block text-sm font-medium mb-2">
@@ -178,11 +192,11 @@ const AddShow = () => {
         </div>
       </div>
 
-      {Object.keys(dateTimeSelection).length > 0 && (
+      {Object.keys(dateTimeSelection).length > 0 && (  //Object.keys returns an array of keys
         <div className="mt-6">
           <h2 className="mb-2">Selected Date-Time</h2>
           <ul className="space-y-3">
-            {Object.entries(dateTimeSelection).map(([date, times]) => (
+            {Object.entries(dateTimeSelection).map(([date, times]) => (   //Object.entries() is a JavaScript method that returns an array of key-value pairs from an object.
               <li key={date}>
                 <div className="font-medium">{date}</div>
                 <div className="flex flex-wrap gap-2 mt-1 text-sm">
@@ -208,6 +222,7 @@ const AddShow = () => {
           </ul>
         </div>
       )}
+
       <button
         className="bg-primary text-white px-8 py-2 mt-6 rounded
     hover:bg-primary/90 transition-all cursor-pointer"
