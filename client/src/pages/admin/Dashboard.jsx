@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from "react";
 import { dummyDashboardData } from "../../assets/assets";
 import {
@@ -9,13 +10,17 @@ import {
   StarIcon,
   UsersIcon,
 } from "lucide-react";
-
+import { useDispatch, useSelector } from "react-redux";
 import BlurCircle from "../../components/BlurCircle";
 import Title from "./component/Title";
+import { getActiveShows } from "../../store/admin/show-slice";
 
 const Dashboard = () => {
-  const currency = import.meta.env.VITE_CURRENCY || "rupee";
-
+  // const currency = import.meta.env.VITE_CURRENCY || "rupee";
+  const dispatch = useDispatch();
+    const { shows, isLoading } = useSelector((state) => state.shows);
+    console.log(shows,"gtr");
+    
   const [dashboardData, setDashboardData] = useState({
     totalBookings: 0,
     totalRevenue: 0,
@@ -54,8 +59,8 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    dispatch(getActiveShows());
+  }, [dispatch]);
 
   const Dashboard = () => {
     const { totalBookings, totalRevenue, totalUser, activeShows } =
@@ -88,29 +93,37 @@ const Dashboard = () => {
       <div className="relative flex flex-wrap gap-6 mt-4 max-w-5x1">
         <BlurCircle top="100px" left="-10%" />
 
-        {dashboardData.activeShows.map((show) => (
-          <div
-            key={show._id}
-            className="w-55 rounded-lg overflow-hidden h-full pb-3 bg-primary/10 border border-primary/20 hover:-translate-y-1 transition duration-300"
-          >
-            <img
-              src={show.movie.poster_path}
-              alt=""
-              className="h-60 w-full object-cover"
-            />{" "}
-            I<p className="font-medium p-2 truncate">{show.movie.title}</p>
-            <div className="flex items-center justify-between px-2">
-              <p className="text-lg font-medium">${show.showPrice}</p>
-              <p className="flex items-center gap-1 text-sm text-gray-400 mt-1 pr-1">
-                <StarIcon className="w-4 h-4 text-primary fill-primary" />
-                {show.movie.vote_average.toFixed(1)}
-              </p>
-            </div>
-            <p className="px-2 pt-2 text-sm text-gray-500">
-              {/* {dateFormat(show.showDateTime)} */}
+      {shows.map((show) => (
+        <div
+          key={show._id}
+          className="w-55 rounded-lg overflow-hidden h-full pb-3 bg-primary/10 border border-primary/20 hover:-translate-y-1 transition duration-300"
+        >
+          <img
+            src={`https://image.tmdb.org/t/p/w500${show.poster_path}`} // ✅ Add TMDB base URL if needed
+            alt={show.title}
+            className="h-60 w-full object-cover"
+          />
+
+          <p className="font-medium p-2 truncate">{show.title}</p>
+
+          <div className="flex items-center justify-between px-2">
+            {/* If showPrice is not available, you can skip it or show N/A */}
+            <p className="text-lg font-medium">
+              {show.showPrice ? `$${show.showPrice}` : "N/A"}
+            </p>
+
+            <p className="flex items-center gap-1 text-sm text-gray-400 mt-1 pr-1">
+              <StarIcon className="w-4 h-4 text-primary fill-primary" />
+              {show.vote_average?.toFixed(1)}
             </p>
           </div>
-        ))}
+
+          <p className="px-2 pt-2 text-sm text-gray-500">
+            Release Date: {show.release_date}
+          </p>
+        </div>
+      ))}
+
       </div>
     </>
   );

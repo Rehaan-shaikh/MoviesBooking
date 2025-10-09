@@ -5,6 +5,8 @@ import { useDispatch } from "react-redux";
 import { checkAuth } from "./store/authSlice";
 
 const App = () => {
+  // const { isAuthenticated, user } = useSelector((state) => state.auth);
+  // console.log("user in App.jsx:", user);
   const dispatch = useDispatch();
 
   useEffect(() => {

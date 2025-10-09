@@ -3,11 +3,14 @@ import { CheckIcon, DeleteIcon, Loader, StarIcon } from "lucide-react";
 import Title from "./component/Title";
 import { kConverter } from "../../Lib/kConverter";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { addShow } from "../../store/admin/show-slice";
+
 //REFER FOR UNDERSTANDING THIS CODE:
 // https://chatgpt.com/share/68e68f8a-ba18-8007-abd9-8a4a41ea9532
 const AddShow = () => {
   // const currency = import.meta.env.VITE_CURRENCY;
-
+  const dispatch = useDispatch();
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [dateTimeSelection, setDateTimeSelection] = useState({});
@@ -37,7 +40,6 @@ const AddShow = () => {
 
   const handleAddShow = async () => {
     // const isFieldEmpty = movieId && dateTimeSelection && showPrice;
-    // if(!isFieldEmpty) return alert("Enter All Information To Add a Show")
     try {
       const payload = {
         movieId: selectedMovie,
@@ -45,26 +47,20 @@ const AddShow = () => {
         showPrice: showPrice,
       };
       if (!payload) return alert("Enter All Information To Add a Show");
-      const res = await axios.post(
-        "http://localhost:3000/api/show/addShow",
-        payload
-      ); // your backend URL
-      console.log("Response:", res.data);
+      const res = await dispatch(addShow(payload));
+      if (res?.error) return alert(res?.error);
+      console.log(res);
+      alert("Show Added Successfully");
+      // ✅ Reset all states after success
+      setSelectedMovie(null);
+      setDateTimeSelection({});
+      setDateTimeInput("");
+      setShowPrice("");
+      setShowsInput([{ date: "", time: [] }]);
     } catch (error) {
       console.error("Error while Adding Show", error);
     }
   };
-
-  // const fetchNowPlayindgMovies = async () => {
-  //   try {
-  //     const response = await axios.get("http://localhost:3000/api/show/now-playing");
-  //     console.log("Full response:", response);
-  //     console.log("response.data:", response.data);
-  //     console.log("response.data.movies:", response.data.movies);
-  //   } catch (error) {
-  //     console.error("Error fetching movies:", error);
-  //   }
-  // };
 
   const handleDateTimeAdd = () => {
     if (!dateTimeInput) return;
@@ -79,7 +75,7 @@ const AddShow = () => {
       return prev; //if time for a perticular date exist, then dont do (add) anything
     });
   };
-  //Dummy dateTimeSelection data
+  //Dummy dateTimeSelection data:
   //   dateTimeSelection = {
   //   "2025-10-09": ["18:30", "20:00"],
   //   "2025-10-10": ["17:15"],
@@ -121,8 +117,6 @@ const AddShow = () => {
 
   useEffect(() => {
     fetchNowPlayingMovies();
-    // fetchNowPlayindgMovies();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return nowPlayingMovies.length > 0 ? (

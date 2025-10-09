@@ -107,7 +107,7 @@ export const getActiveShows = async (req, res) => {
 
     //A Set in JavaScript is a collection of unique values. By converting the moviesArray to a Set, you automatically filter out any duplicate movie entries, ensuring that each movie appears only once in the final output.
     const uniqueShows = new Set(moviesArray);
-    res.json({ success: true, uniqueShows: Array.from(uniqueShows) });
+    res.json({ success: true, shows: Array.from(uniqueShows) });
   }
   catch (error) {
     console.error(error);
