@@ -86,3 +86,19 @@ export const checkAuth = async (req, res) => {
     res.status(401).json({ message: "Not authenticated" });
   }
 };
+
+
+export const getCurrentUser = async (req) => {
+  try {
+    const token = req.cookies.token;
+    if (!token) return null;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const user = await User.findById(decoded.id).select("-password");
+
+    return user || null;
+  } catch (err) {
+    console.log("Auth check failed:", err.message);
+    return null;
+  }
+};

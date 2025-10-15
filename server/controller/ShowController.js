@@ -114,3 +114,45 @@ export const getActiveShows = async (req, res) => {
     res.json({ success: false, message: error.message });
   }
 }
+
+
+// Get shows for a specific movie on a specific date
+export const getMovieShowsByDate = async (req, res) => {
+  try {
+    const { movieId, date } = req.params;
+    console.log(movieId, date, "aaaaaaaa");
+
+    // ✅ Correct key name (tmdb_id)
+    const movie = await Movie.findOne({ tmdb_id: movieId });
+    if (!movie) {
+      return res.status(404).json({ message: "Movie not found" });
+    }
+
+    // ✅ Date range search for that entire day
+    const startOfDay = new Date(date);
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const shows = await Show.find({
+      movie: movie._id,
+      showDateTime: { $gte: startOfDay, $lte: endOfDay },
+    }).sort({ showDateTime: 1 });
+
+    const timings = shows.map((show) => ({
+      time: show.showDateTime,
+      showId: show._id,
+      price: show.showPrice,
+    }));
+
+    // ✅ No formattedMovie defined — return full movie
+    res.status(200).json({
+      movie,
+      showTimings: {
+        [date]: timings,
+      },
+    });
+  } catch (err) {
+    console.error("Error fetching movie shows by date:", err);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};

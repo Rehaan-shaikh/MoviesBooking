@@ -1,12 +1,23 @@
-import React from "react";
+/* eslint-disable no-unused-vars */
+import React, { useEffect } from "react";
 import BlurCircle from "./BlurCircle";
 import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
-import { dummyShowsData } from "../assets/assets";
 import MovieCard from "./MovieCard";
+import { useDispatch, useSelector } from "react-redux";
+import { getActiveShows } from "../store/admin/show-slice";
+
 
 const FeaturedSection = () => {
   const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const { shows, isLoading } = useSelector((state) => state.shows);
+    console.log(shows,"gtr");
+
+    useEffect(() => {
+    dispatch(getActiveShows());
+  }, [dispatch]);
 
   return (
     <div className="px-6 md:px-16 lg:px-24 xl:px-44 overflow-hidden">
@@ -25,7 +36,7 @@ const FeaturedSection = () => {
       {/* your movie cards will go here (improve the styling from gird to flex box(responsiveness issue) 1.32.18) */}
         <div className="flex flex-wrap max-sm:justify-center gap-8
     mt-8">
-        {dummyShowsData.slice(0, 4).map((show) => (
+        {shows.slice(0, 4).map((show) => (
             <MovieCard key={show._id} movie={show} />
         ))}
         </div>

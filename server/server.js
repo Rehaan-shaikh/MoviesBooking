@@ -2,9 +2,11 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import connectDB from './config/DB.js';
-import authRoutes from "./routes/AuthRoutes.js";
-import movieRoutes from "./routes/MovieRoutes.js";
 import cookieParser from 'cookie-parser';
+import authRoutes from "./routes/AuthRoutes.js";
+import showRoutes from "./routes/ShowRoutes.js";
+import movieRoutes from "./routes/MovieRoute.js";
+import bookingRoutes from "./routes/BookingRoutes.js";
 
 const app = express();
 const port = 3000;
@@ -27,7 +29,9 @@ app.get("/",(req , res)=>{
 
 //setting up routes 
 app.use("/api/auth", authRoutes);
-app.use("/api/show", movieRoutes);
+app.use("/api/show", showRoutes);
+app.use("/api/movies" , movieRoutes);
+app.use("/api/booking" , bookingRoutes);
 
 
 app.listen(port,()=>{

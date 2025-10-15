@@ -57,7 +57,7 @@ const RouterWrapper = () => {
           <Route index element={<Home />} />
           <Route path="movies" element={<Movies />} />
           <Route path="movies/:id" element={<MovieDetails />} />
-          <Route path=":date" element={<SeatLayout />} />
+          <Route path ="movies/:id/:date" element={<SeatLayout />} />
           <Route path="my-bookings" element={<MyBookings />} />
           <Route path="favorite" element={<Favorite />} />
         </Route>

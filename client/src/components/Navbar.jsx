@@ -66,9 +66,9 @@ const Navbar = () => {
             window.scrollTo(0, 0);
             setIsOpen(false);
           }}
-          to="/"
+          to="/my-bookings"
         >
-          Releases
+          My Bookings
         </Link>
         <Link
           onClick={() => {
