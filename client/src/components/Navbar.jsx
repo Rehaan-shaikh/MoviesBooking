@@ -52,15 +52,7 @@ const Navbar = () => {
         >
           Movies
         </Link>
-        <Link
-          onClick={() => {
-            window.scrollTo(0, 0);
-            setIsOpen(false);
-          }}
-          to="/"
-        >
-          Theaters
-        </Link>
+        
         <Link
           onClick={() => {
             window.scrollTo(0, 0);

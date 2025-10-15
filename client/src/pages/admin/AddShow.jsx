@@ -12,6 +12,7 @@ const AddShow = () => {
   // const currency = import.meta.env.VITE_CURRENCY;
   const dispatch = useDispatch();
   const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedMovie, setSelectedMovie] = useState(null);
   const [dateTimeSelection, setDateTimeSelection] = useState({});
   const [dateTimeInput, setDateTimeInput] = useState("");
@@ -36,6 +37,7 @@ const AddShow = () => {
         console.error("Error fetching users:", error);
       });
     // setNowPlayingMovies(dummyShowsData);
+    setIsLoading(false);
   };
 
   const handleAddShow = async () => {
@@ -48,7 +50,10 @@ const AddShow = () => {
       };
       if (!payload) return alert("Enter All Information To Add a Show");
       const res = await dispatch(addShow(payload));
-      if (res?.error) return alert(res?.error);
+      if (!res.payload?.success) {
+        return alert(res.payload?.message || "Failed to add show");
+      }
+      alert("Show Added Successfully");
       console.log(res);
       alert("Show Added Successfully");
       // ✅ Reset all states after success
@@ -119,7 +124,14 @@ const AddShow = () => {
     fetchNowPlayingMovies();
   }, []);
 
-  return nowPlayingMovies.length > 0 ? (
+
+  if(isLoading){
+    return (
+      <Loader />
+    )
+  }
+
+  return (
     <>
       <Title text1="Add" text2="Shows" />
       <p className="mt-10 text-lg font-medium">Now Playing Movies</p>
@@ -263,9 +275,7 @@ const AddShow = () => {
         Add Show
       </button>
     </>
-  ) : (
-    <Loader />
-  );
+  )
 };
 
 export default AddShow;

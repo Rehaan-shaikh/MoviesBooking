@@ -7,6 +7,7 @@ import authRoutes from "./routes/AuthRoutes.js";
 import showRoutes from "./routes/ShowRoutes.js";
 import movieRoutes from "./routes/MovieRoute.js";
 import bookingRoutes from "./routes/BookingRoutes.js";
+import adminRoutes from "./routes/AdminRoutes.js";
 
 const app = express();
 const port = 3000;
@@ -32,6 +33,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/show", showRoutes);
 app.use("/api/movies" , movieRoutes);
 app.use("/api/booking" , bookingRoutes);
+app.use("/api/admin",adminRoutes);
 
 
 app.listen(port,()=>{
