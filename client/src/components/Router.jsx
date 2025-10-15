@@ -21,6 +21,7 @@ import AddShow from "../pages/admin/AddShow.jsx";
 import CheckAuth from "./CheckAuth.jsx";
 import { useEffect } from "react";
 import { checkAuth } from "../store/authSlice/index.js";
+import FoodItems from "../pages/admin/FoodItems.jsx";
 
 const RouterWrapper = () => {
   const dispatch = useDispatch();
@@ -75,6 +76,7 @@ const RouterWrapper = () => {
             <Route path="list-shows" element={<ListShows />} />
             <Route path="list-bookings" element={<ListBookings />} />
             <Route path="add-shows" element={<AddShow />} />
+            <Route path="food-items" element={<FoodItems />} />
         </Route>
       </>
     )
