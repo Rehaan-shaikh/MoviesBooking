@@ -47,7 +47,7 @@ export const addShow = async (req, res) => {
         overview: movieApiData.overview,
         poster_path: movieApiData.poster_path,
         backdrop_path: movieApiData.backdrop_path,
-        genres: movieApiData.genres.map(g => g.name),  //generes is an array of objects, we need only name from those obj
+        genres: movieApiData.genres.map((g) => g.name), //generes is an array of objects, we need only name from those obj
         casts: movieCreditsData.cast,
         release_date: movieApiData.release_date,
         original_language: movieApiData.original_language,
@@ -60,8 +60,8 @@ export const addShow = async (req, res) => {
       movie = await Movie.create(movieDetails);
     }
 
-  //ShowInput is an array of objects
-  // ex: const showsInput = [
+    //ShowInput is an array of objects
+    // ex: const showsInput = [
     //   {
     //     date: "2025-10-09",
     //     time: ["18:30", "20:00"]
@@ -71,50 +71,52 @@ export const addShow = async (req, res) => {
     //     time: ["17:15"]
     //   }
     // ];
-    //REFER THIS TO UNDERSTAND THE BELOW LOGIC 
+    //REFER THIS TO UNDERSTAND THE BELOW LOGIC
     // https://chatgpt.com/share/68e762df-a9cc-8007-ad1d-5dd3a92a80cd
     const showsToCreate = [];
     showsInput.forEach((show) => {
-        const showDate = show.date;
-        show.time.forEach((time) => {
-            const dateTimeString = `${showDate}T${time}`;
-            showsToCreate.push({
-                movie: movie._id,  //acts as a foreign key (or more precisely, a reference) to the Movie document in MongoDB.
-                showDateTime: new Date(dateTimeString),
-                showPrice,
-                occupiedSeats: {}
-            })
+      const showDate = show.date;
+      show.time.forEach((time) => {
+        const dateTimeString = `${showDate}T${time}`;
+        showsToCreate.push({
+          movie: movie._id, //acts as a foreign key (or more precisely, a reference) to the Movie document in MongoDB.
+          showDateTime: new Date(dateTimeString),
+          showPrice,
+          occupiedSeats: {},
         });
+      });
     });
 
     if (showsToCreate.length > 0) {
-        await Show.insertMany(showsToCreate);
+      await Show.insertMany(showsToCreate);
     }
     res.json({ success: true, message: "Shows added successfully" });
   } catch (error) {
     console.error(error);
-    res.json({ success: false, message: error.message || "Shows not added successfully" });
+    res.json({
+      success: false,
+      message: error.message || "Shows not added successfully",
+    });
   }
 };
 
-
 export const getActiveShows = async (req, res) => {
   try {
-    const shows = await Show.find({showDateTime  : {$gte : new Date()}}).populate("movie").sort({showDateTime : 1});  //dont return the past shows
+    const shows = await Show.find({ showDateTime: { $gte: new Date() } })
+      .populate("movie")
+      .sort({ showDateTime: 1 }); //dont return the past shows
     // shows is an array of show documents you fetched from MongoDB. Each show document contains a reference to a movie document through the movie field.
-    const moviesArray = shows.map(show => show.movie);
+    const moviesArray = shows.map((show) => show.movie);
     // console.log(moviesArray);  //This takes only the movie object from each show:
 
     //A Set in JavaScript is a collection of unique values. By converting the moviesArray to a Set, you automatically filter out any duplicate movie entries, ensuring that each movie appears only once in the final output.
     const uniqueShows = new Set(moviesArray);
     res.json({ success: true, shows: Array.from(uniqueShows) });
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
     res.json({ success: false, message: error.message });
   }
-}
-
+};
 
 // Get shows for a specific movie on a specific date
 export const getMovieShowsByDate = async (req, res) => {
@@ -156,3 +158,32 @@ export const getMovieShowsByDate = async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 };
+
+//search movie function
+export const searchMoviesByTitle = async (req, res) => {
+  try {
+    const { query } = req.body;
+    console.log("query", query);
+
+    const response = await axios.get(
+      `https://api.themoviedb.org/3/search/movie?query=${query}`,
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+        },
+      }
+    );
+
+    const movies = response.data.results;
+    console.log(movies);
+
+    res.json({ success: true, movies });
+  } catch (error) {
+    console.error(error.response?.data || error.message);
+    res.status(500).json({
+      success: false,
+      message: error.response?.data?.status_message || error.message,
+    });
+  }
+};
+

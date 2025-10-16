@@ -36,6 +36,7 @@ app.use("/api/movies" , movieRoutes);
 app.use("/api/booking" , bookingRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/food",foodRoutes);
+app.use("/api/search", showRoutes);
 
 
 app.listen(port,()=>{

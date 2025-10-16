@@ -36,7 +36,7 @@ const AdminSidebar = () => {
     { name: "List Shows", path: "/admin/list-shows", icon: ListIcon },
     { name: "List Bookings",path: "/admin/list-bookings",icon: ListCollapseIcon},
     { name: "Food Items",path: "/admin/food-items",icon: CookingPot},
-    { name: "Search Movies", path: "/admin/Search", icon: Search },
+    { name: "Search Movies", path: "/admin/search-movies", icon: Search },
 
   ];
 
