@@ -31,10 +31,10 @@ const ListShows = () => {
                   <td className="whitespace-nowrap py-4 px-4">
                     <div className="flex items-center">
                       <div className="h-16 w-12 flex-shrink-0">
-                        <img className="h-16 w-12 rounded object-cover" src={show.movie.poster_path} alt={show.movie.title} />
+                        <img className="h-16 w-12 rounded object-cover" src={show.poster_path} alt={show.title} />
                       </div>
                       <div className="ml-4">
-                        <div className="font-medium">{show.movie.title}</div>
+                        <div className="font-medium">{show.title}</div>
                       </div>
                     </div>
                   </td>

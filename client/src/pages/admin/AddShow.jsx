@@ -56,7 +56,6 @@ const AddShow = () => {
       }
       toast("Show Added Successfully");
       console.log(res);
-      toast("Show Added Successfully");
       // ✅ Reset all states after success
       setSelectedMovie(null);
       setDateTimeSelection({});
