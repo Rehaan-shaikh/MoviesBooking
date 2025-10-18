@@ -7,6 +7,7 @@ import { ArrowRightIcon, ClockIcon } from "lucide-react";
 import BlurCircle from "../components/BlurCircle";
 import axios from "axios";
 import SelectMeals from "../components/selectMeals";
+import { toast } from "react-toastify";
 
 const SeatLayout = () => {
   const groupRows = [
@@ -53,10 +54,10 @@ const SeatLayout = () => {
 
   // 🎟 Handle seat selection
   const handleSeatClick = (seatId) => {
-    if (!selectedTime?.time) return alert("Please select time first");
+    if (!selectedTime?.time) return toast("Please select time first");
 
     if (!selectedSeats.includes(seatId) && selectedSeats.length >= 5) {
-      return alert("You can select up to 5 seats only");
+      return toast("You can select up to 5 seats only");
     }
 
     setSelectedSeats((prev) =>
@@ -76,7 +77,7 @@ const SeatLayout = () => {
       if (data.success) {
         setOccupiedSeats(data.occupiedSeats);
       } else {
-        alert(data.message);
+        toast(data.message);
       }
     } catch (error) {
       console.log(error);
@@ -87,7 +88,7 @@ const SeatLayout = () => {
   const BookTicket = async () => {
     try {
       if (!selectedSeats.length || !selectedTime)
-        return alert("Please select time and seat.");
+        return toast("Please select time and seat.");
 
       const booking = await axios.post(
         `http://localhost:3000/api/booking/create`,
@@ -100,14 +101,14 @@ const SeatLayout = () => {
       );
 
       if (booking.data.success) {
-        alert("Booking successful!");
+        toast("Booking successful!");
         navigate("/my-bookings");
       } else {
-        alert(booking.data.message);
+        toast(booking.data.message);
       }
     } catch (error) {
       console.log(error);
-      alert(error.message || "Error while booking");
+      toast(error.message || "Error while booking");
     }
   };
 

@@ -4,6 +4,7 @@ import BlurCircle from '../components/BlurCircle.jsx';
 import { assets } from '../assets/assets.js';
 import { useDispatch } from "react-redux";
 import { loginUser, signupUser } from '../store/authSlice/index.js';
+import { toast } from 'react-toastify';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -30,30 +31,32 @@ const handleSubmit = async (e) => {
   try {
     if (isLogin) {
       const data = await dispatch(loginUser(formData));
+      // console.log(data);
+      
 
-      if (data?.payload?.status === 200) {
-        alert("Login Success");
+      if (data?.payload?.success) {
+        toast.success("Login Success");
         navigate("/");
       } else {
         // console.log(data);
-        
-        alert(data?.payload?.message || "Login Failed");
+        toast.error("Login Failed");
       }
     } else {
       const data = await dispatch(signupUser(formData));
 
-      if (data?.payload?.status === 201) {
-        alert("Signup Success");
+      if (data?.payload?.success) {
+        toast.success("Signup Success");
+        setIsLogin(true);
         navigate("/");
       } else {
-        alert(data?.payload?.message || "Signup Failed");
+        toast.error("Signup Failed");
         // console.log(data);
         
       }
     }
   } catch (error) {
     console.error("Error in handleSubmit:", error);
-    alert("Something went wrong! Check console for details.");
+    toast("Something went wrong! Check console for details.");
   }
 };
 

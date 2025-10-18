@@ -5,6 +5,7 @@ import { kConverter } from "../../Lib/kConverter";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addShow } from "../../store/admin/show-slice";
+import { toast } from "react-toastify";
 
 //REFER FOR UNDERSTANDING THIS CODE:
 // https://chatgpt.com/share/68e68f8a-ba18-8007-abd9-8a4a41ea9532
@@ -48,14 +49,14 @@ const AddShow = () => {
         showsInput: showsInput,
         showPrice: showPrice,
       };
-      if (!payload) return alert("Enter All Information To Add a Show");
+      if (!payload) return toast("Enter All Information To Add a Show");
       const res = await dispatch(addShow(payload));
       if (!res.payload?.success) {
-        return alert(res.payload?.message || "Failed to add show");
+        return toast(res.payload?.message || "Failed to add show");
       }
-      alert("Show Added Successfully");
+      toast("Show Added Successfully");
       console.log(res);
-      alert("Show Added Successfully");
+      toast("Show Added Successfully");
       // ✅ Reset all states after success
       setSelectedMovie(null);
       setDateTimeSelection({});

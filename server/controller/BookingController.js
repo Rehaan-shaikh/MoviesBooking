@@ -114,6 +114,7 @@ export const createBooking = async (req, res) => {
     showData.markModified("occupiedSeats");
     await showData.save();
 
+    
 
     res.json({
       success: true,

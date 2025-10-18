@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import FoodList from "../../components/admin/Food";
+import { toast } from "react-toastify";
 
 const AddFood = () => {
   const [formData, setFormData] = useState({ name: "", description: "", price: "" });
@@ -48,7 +49,7 @@ const AddFood = () => {
         // Without this, the server wouldn’t know how to parse the incoming file.
         headers: { "Content-Type": "multipart/form-data" },
       });
-
+      toast("Added Successfuly");
       setMessage(res.data.message);
       setFormData({ name: "", description: "", price: "" });
       setFile(null);

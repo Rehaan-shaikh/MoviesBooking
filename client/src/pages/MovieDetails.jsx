@@ -5,6 +5,7 @@ import { Heart, PlayCircleIcon, StarIcon, X } from "lucide-react";
 import DateSelect from "../components/DateSelect";
 import axios from "axios";
 import ReactPlayer from "react-player/youtube";
+import { toast } from "react-toastify";
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -51,11 +52,11 @@ const MovieDetails = () => {
         {},
         { withCredentials: true } // include cookies for auth
       );
-      alert(res.data.message);
+      toast(res.data.message);
       setIsFavourite((prev) => !prev); // update instantly
     } catch (error) {
       console.error("Error toggling favourite:", error);
-      alert(error.response?.data?.message || "Something went wrong");
+      toast(error.response?.data?.message || "Something went wrong");
     }
   };
 
@@ -74,7 +75,7 @@ const MovieDetails = () => {
         setTrailerUrl(`https://www.youtube.com/watch?v=${trailer.key}`);
         setShowTrailer(true);
       } else {
-        alert("No official trailer found 😢");
+        toast("No official trailer found 😢");
       }
     } catch (error) {
       console.error("Error fetching trailer:", error);
@@ -127,9 +128,9 @@ const MovieDetails = () => {
           </p>
 
           <p>
-            {movie.runtime} min •{" "}
-            {movie.genres?.map((genre) => genre.name).join(", ")} •{" "}
-            {movie.release_date?.split("-")[0]}
+            {movie.runtime} min
+            {/* {movie.genres?.map((genre) => genre.name).join(",")} •{" "} */}
+            {/* {movie.release_date?.split("-")[0]} */}
           </p>
 
           <div className="flex items-center flex-wrap gap-4 mt-4">

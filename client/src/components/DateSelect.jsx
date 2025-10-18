@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import BlurCircle from "./BlurCircle";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const DateSelect = ({ dateTime, id }) => {
   // console.log(dateTime);
@@ -14,7 +15,7 @@ const DateSelect = ({ dateTime, id }) => {
       // Navigate to /movies/:id/:date (example: /movies/941109/2025-10-12)
       navigate(`/movies/${id}/${date}`);
     } else {
-      alert("Please select a date first!");
+      toast("Please select a date first!");
     }
   };
 

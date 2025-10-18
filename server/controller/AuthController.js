@@ -22,10 +22,10 @@ export const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.status(201).json({ message: "User created successfully", user });
+    res.status(201).json({ success : true,message: "User created successfully", user });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success : false, message: "Server error"});
   }
 };
 
@@ -54,10 +54,10 @@ export const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 
-    res.status(200).json({ message: "Login successful", user });
+    res.status(200).json({ success : true, user });
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ success : false, message: "Server error" });
   }
 };
 

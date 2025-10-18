@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import RouterWrapper from "./components/Router";
 import { useDispatch } from "react-redux";
 import { checkAuth } from "./store/authSlice";
+import { ToastContainer } from 'react-toastify';
 
 const App = () => {
   // const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -15,7 +16,13 @@ const App = () => {
 
   const router = RouterWrapper();
 
-  return <RouterProvider router={router} />;
+    return (
+      <div>
+        <RouterProvider router={router} />
+        <ToastContainer />
+      </div>
+    )
+
 };
 
 export default App;
