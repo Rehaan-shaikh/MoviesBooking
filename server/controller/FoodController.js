@@ -1,4 +1,4 @@
-import Food from "../models/Foode.js";
+import Food from "../models/Food.js";
 import cloudinary from "../lib/cloudinary.js";
 
 // 🧑‍🍳 Add a new food item (Admin)
