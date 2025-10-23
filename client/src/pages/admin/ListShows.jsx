@@ -1,89 +1,72 @@
-import React from 'react';
-import { dummyDashboardData } from '../../assets/assets.js';
-import { Trash2, Edit } from 'lucide-react';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import Title from "./component/Title.jsx";
+import { dateFormat } from "../../Lib/dateFormat.js";
 
 const ListShows = () => {
-  const { activeShows } = dummyDashboardData;
+  const [shows, setShows] = useState([]);
+  const getAllShows = async () => {
+    try {
+      const res = await axios.get("http://localhost:3000/api/admin/list-shows");
+      setShows(res.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  useEffect(() => {
+    getAllShows();
+  }, []);
 
   return (
-    <div className="text-white">
-      <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold">Show Listings</h1>
-        <button className="bg-primary hover:bg-primary-dull text-white font-bold py-2 px-4 rounded-lg">
-          Add New Show
-        </button>
-      </div>
-      <div className="bg-[#1A1A1A] border border-gray-700 rounded-lg overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-700">
-            <thead className="bg-[#2D2D2D]">
-              <tr>
-                <th scope="col" className="py-3.5 px-4 text-left text-sm font-semibold text-gray-300">Movie</th>
-                <th scope="col" className="py-3.5 px-4 text-left text-sm font-semibold text-gray-300">Date & Time</th>
-                <th scope="col" className="py-3.5 px-4 text-left text-sm font-semibold text-gray-300">Price</th>
-                <th scope="col" className="py-3.5 px-4 text-left text-sm font-semibold text-gray-300">Occupied Seats</th>
-                <th scope="col" className="py-3.5 px-4 text-left text-sm font-semibold text-gray-300">Actions</th>
+    <>
+      <Title text1="List" text2="Shows" />
+      <div className="max-w-4x1 mt-6 overflow-x-auto">
+        <table className="w-full border-collapse rounded-md overflow-hidden text-nowrap">
+          <thead>
+            <tr className="bg-primary/20 text-left text-white">
+              <th className="p-2 font-medium pl-5">Movie Name</th>
+              <th className="p-2 font-medium">Show Time</th>
+              <th className="p-2 font-medium">Total Bookings</th>
+              <th className="p-2 font-medium">Earnings</th>
+            </tr>
+          </thead>
+          <tbody className="text-sm font-light">
+            {shows.map((show, index) => (
+              <tr
+                key={index}
+                className="border-b border-primary/10 bg-primary/5 even:bg-primary/10"
+              >
+                <td className="p-2 min-w-45 pl-5">
+                  <div className="flex items-center">
+                    <div className="h-16 w-12 flex-shrink-0">
+                      <img
+                        className="h-16 w-12 rounded object-cover"
+                        src={`https://image.tmdb.org/t/p/w500${show.movie?.poster_path}`}
+                        alt=""
+                      />
+                    </div>
+                    <div className="ml-4">
+                      <div className="font-medium">{show.movie?.title}</div>
+                    </div>
+                  </div>
+                  {/* {show.movie?.title} */}
+                </td>
+                <td className="p-2">{dateFormat(show.showDateTime)}</td>
+                <td className="p-2">
+                  {Object.keys(show.occupiedSeats || {}).length}
+                </td>
+                <td className="p-2">
+                  $
+                  {Object.keys(show.occupiedSeats || {}).length *
+                    show.showPrice}
+                </td>
               </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-800">
-              {activeShows.map((show) => (
-                <tr key={show._id}>
-                  <td className="whitespace-nowrap py-4 px-4">
-                    <div className="flex items-center">
-                      <div className="h-16 w-12 flex-shrink-0">
-                        <img className="h-16 w-12 rounded object-cover" src={show.poster_path} alt={show.title} />
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-medium">{show.title}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-300">{new Date(show.showDateTime).toLocaleString()}</td>
-                  <td className="whitespace-nowrap px-4 py-4 text-sm font-medium text-primary">${show.showPrice}</td>
-                  <td className="whitespace-nowrap px-4 py-4 text-sm text-gray-300">{Object.keys(show.occupiedSeats).length}</td>
-                  <td className="whitespace-nowrap px-4 py-4 text-sm">
-                    <div className="flex items-center gap-4">
-                      <button className="text-yellow-400 hover:text-yellow-300">
-                        <Edit size={18} />
-                      </button>
-                      <button className="text-red-500 hover:text-red-400">
-                        <Trash2 size={18} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </div>
+    </>
   );
 };
 
 export default ListShows;
-
-
-
-// const ListShows = () => {
-//   const currency = import.meta.env.VITE_CURRENCY
-// const [shows, setShows] = useState([]);
-// const [loading, setLoading] = useState(true);
-// const getAllShows = async () =>{
-// try {
-// SetShows ([{
-// movie: dummyShowsData[0],
-// showDateTime: "2025-06-30T02:30:00.000Z",
-// showPrice: 59,
-// occupiedSeats: {
-// A1: "user_1",
-// B1: "user_2".
-// C1: "user_3"
-// }
-// }]);
-// setLoading (false);
-// } catch (error) {
-// console.error(error);
-// }
-// }
-
