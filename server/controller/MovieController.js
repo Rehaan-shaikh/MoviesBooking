@@ -28,6 +28,7 @@ export const getMovieShowDetails = async (req, res) => {
       dateTime[date].push(time);
     });
 
+
     // 4️⃣ Send combined response
     res.json({
       success: true,

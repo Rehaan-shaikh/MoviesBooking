@@ -34,7 +34,7 @@ const MovieDetails = () => {
       const res = await axios.get(`http://localhost:3000/api/movies/favourate`,
         { withCredentials: true } // include cookies for auth
       );
-      console.log(res.data);
+      // console.log(res.data);
       
       const favMovies = res.data?.favourites || [];
       const exists = favMovies.some((fav) => fav.tmdb_id === id);
@@ -97,8 +97,10 @@ const MovieDetails = () => {
       </div>
     );
   }
-
+  console.log(show);
   const movie = show.movie || {};
+  // console.log(movie);
+  
   const baseUrl = "https://image.tmdb.org/t/p/w500";
 
   return (
@@ -128,9 +130,8 @@ const MovieDetails = () => {
           </p>
 
           <p>
-            {movie.runtime} min
-            {/* {movie.genres?.map((genre) => genre.name).join(",")} •{" "} */}
-            {/* {movie.release_date?.split("-")[0]} */}
+            {movie.runtime} min •{" "}
+            {movie.genres?.map((genre) => genre).join(",")}
           </p>
 
           <div className="flex items-center flex-wrap gap-4 mt-4">
@@ -145,12 +146,20 @@ const MovieDetails = () => {
             </button>
 
             <button
+              onClick={() => {
+                const element = document.getElementById("dateSelect");
+                if (element) {
+                  element.scrollIntoView({ behavior: "smooth" }); // 👈 smooth scroll
+                  //Scroll the page until this element is visible in the viewport, and do it smoothly
+                }
+              }}
               className="px-10 py-3 text-sm bg-primary 
               hover:bg-primary-dull transition rounded-md font-medium cursor-pointer 
               active:scale-95"
             >
               Buy Tickets
             </button>
+
 
             {/* ❤️ Favourite Button */}
             <button

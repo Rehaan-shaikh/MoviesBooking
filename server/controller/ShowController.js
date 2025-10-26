@@ -122,7 +122,7 @@ export const getActiveShows = async (req, res) => {
 export const getMovieShowsByDate = async (req, res) => {
   try {
     const { movieId, date } = req.params;
-    console.log(movieId, date, "aaaaaaaa");
+    // console.log(movieId, date, "aaaaaaaa");
 
     // ✅ Correct key name (tmdb_id)
     const movie = await Movie.findOne({ tmdb_id: movieId });
@@ -145,6 +145,7 @@ export const getMovieShowsByDate = async (req, res) => {
       showId: show._id,
       price: show.showPrice,
     }));
+
 
     // ✅ No formattedMovie defined — return full movie
     res.status(200).json({

@@ -87,8 +87,15 @@ const SeatLayout = () => {
   // ✅ Book ticket with selected foods
   const BookTicket = async () => {
     try {
-      if (!selectedSeats.length || !selectedTime)
+      if (!selectedSeats.length && !selectedTime)
         return toast("Please select time and seat.");
+
+      if (!selectedTime)
+        return toast("Please select time.");
+
+      if (!selectedSeats.length)
+        return toast("Please select seats.");
+
 
       const booking = await axios.post(
         `http://localhost:3000/api/booking/create`,
@@ -128,7 +135,8 @@ const SeatLayout = () => {
       </div>
     );
   }
-
+  console.log(show.dateTime);
+  
   const timingsForDate = show.dateTime?.[date] || [];
 
   const renderSeats = (row, count = 9) => (
@@ -161,7 +169,7 @@ const SeatLayout = () => {
   return (
     <div className="flex flex-col md:flex-row px-16 lg:px-40 py-10 md:pt-50">
       {/* 🎞 Available Timings */}
-      <div className="w-60 bg-primary/10 border border-primary/20 rounded-lg p-10 h-max sticky md:top-30">
+      <div className="w-70 bg-primary/10 border border-primary/20 rounded-lg p-10 h-max sticky md:top-30">
         <p className="text-lg font-semibold px-6">Available Timings</p>
         <div className="mt-5 space-y-1">
           {timingsForDate.length > 0 ? (
@@ -169,15 +177,22 @@ const SeatLayout = () => {
               <div
                 key={item.time}
                 onClick={() => setSelectedTime(item)}
-                className={`flex items-center gap-2 px-6 py-2 w-max rounded-r-md cursor-pointer transition 
+                className={`flex items-center justify-between gap-4 px-6 py-2 w-full rounded-md cursor-pointer transition 
                   ${
                     selectedTime?.time === item.time
                       ? "bg-primary text-white"
                       : "hover:bg-primary/20"
                   }`}
               >
-                <ClockIcon className="w-4 h-4" />
-                <p className="text-sm">{isoTimeFormat(item.time)}</p>
+                <div className="flex items-center gap-2">
+                  <ClockIcon className="w-4 h-4" />
+                  <p className="text-sm">{isoTimeFormat(item.time)}</p>
+                </div>
+
+                {/* 💰 Show price */}
+                <p className="text-sm font-medium">
+                  ₹{item.price}
+                </p>
               </div>
             ))
           ) : (
@@ -185,6 +200,7 @@ const SeatLayout = () => {
           )}
         </div>
       </div>
+
 
       {/* 🪑 Seats + Meals */}
       <div className="relative flex-1 flex flex-col items-center max-md:mt-16">
