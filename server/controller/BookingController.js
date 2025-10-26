@@ -1,5 +1,5 @@
 import Booking from "../models/Bookings.js";
-import Food from "../models/Foode.js";
+import Food from "../models/Food.js";
 import Show from "../models/Shows.js";
 import { getCurrentUser } from "./AuthController.js";
 
