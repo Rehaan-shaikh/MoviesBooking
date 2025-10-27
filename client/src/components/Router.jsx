@@ -30,7 +30,7 @@ const RouterWrapper = () => {
     useEffect(() => {
       dispatch(checkAuth());
     }, [dispatch]);
-  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const { isAuthenticated, user , isLoading } = useSelector((state) => state.auth);
   // console.log("user in Router.jsx:", user);
 
 
@@ -41,7 +41,7 @@ const RouterWrapper = () => {
         <Route
           path="/login"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth isAuthenticated={isAuthenticated} isLoading={isLoading} user={user}>
               <Auth />
             </CheckAuth>
           }
@@ -51,7 +51,7 @@ const RouterWrapper = () => {
         <Route
           path="/"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth isAuthenticated={isAuthenticated} isLoading={isLoading} user={user}>
               <RootLayout />
             </CheckAuth>
           }
@@ -68,7 +68,7 @@ const RouterWrapper = () => {
         <Route
           path="/admin"
           element={
-            <CheckAuth isAuthenticated={isAuthenticated} user={user}>
+            <CheckAuth isLoading={isLoading} isAuthenticated={isAuthenticated} user={user}>
               <AdminLayout />
             </CheckAuth>
           }

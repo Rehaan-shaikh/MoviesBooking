@@ -1,7 +1,12 @@
 import { Navigate, useLocation } from "react-router-dom";
 
-function CheckAuth({ isAuthenticated, user, children }) {
+function CheckAuth({ isAuthenticated,isLoading , user, children }) {
   const location = useLocation();
+
+  
+  if (isLoading) {
+    return <div className="text-center mt-10">Checking authentication...</div>;
+  }
 
   const publicRoutes = ["/", "/login"];
 
