@@ -7,6 +7,7 @@ import { dateFormat } from "../../Lib/dateFormat.js";
 
 const ListBookings = () => {
   const [bookings, setBookings] = useState([]);
+  
   const getAllBookings = async () => {
     try {
       const res = await axios.get(
