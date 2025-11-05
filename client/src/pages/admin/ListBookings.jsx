@@ -7,7 +7,7 @@ import { dateFormat } from "../../Lib/dateFormat.js";
 
 const ListBookings = () => {
   const [bookings, setBookings] = useState([]);
-  
+
   const getAllBookings = async () => {
     try {
       const res = await axios.get(
@@ -34,9 +34,12 @@ const ListBookings = () => {
               <th className="p-2 font-medium">Show Time</th>
               <th className="p-2 font-medium">Seats</th>
               <th className="p-2 font-medium">Food Items</th>
+              <th className="p-2 font-medium">Quantity</th>{" "}
+              {/* ✅ new column */}
               <th className="p-2 font-medium">Amount</th>
             </tr>
           </thead>
+
           <tbody className="text-sm font-light">
             {bookings.map((item, index) => (
               <tr
@@ -52,14 +55,12 @@ const ListBookings = () => {
                         alt=""
                       />
                     </div>
-                    <div className="ml-4">
-                      <div className="font-medium">
-                        {item.show?.movie?.title}
-                      </div>
+                    <div className="ml-4 font-medium">
+                      {item.show?.movie?.title}
                     </div>
                   </div>
-                  {/* {item.show?.movie?.title} */}
                 </td>
+
                 <td className="p-2 min-w-45 pl-5">{item.user?.name}</td>
                 <td className="p-2">{dateFormat(item.show?.showDateTime)}</td>
                 <td className="p-2">
@@ -67,10 +68,16 @@ const ListBookings = () => {
                     .map((seat) => item.bookedSeats[seat])
                     .join(", ")}
                 </td>
+
                 <td className="p-2">
-                  {/* needs styling */}
-                  {(item.foods || []).map((f)=> f.food?.name)}
+                  {(item.foods || []).map((f) => f.food?.name).join(", ")}
                 </td>
+
+                <td className="p-2">
+                  {(item.foods || []).map((f) => f.quantity).join(", ")}{" "}
+                  {/* ✅ show quantity */}
+                </td>
+
                 <td className="p-2">${item.amount}</td>
               </tr>
             ))}

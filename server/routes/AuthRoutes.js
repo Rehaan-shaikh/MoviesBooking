@@ -14,6 +14,6 @@ router.post("/logout", logout);
 
 router.get("/checkAuth", checkAuth);
 
-checkAuth
+// checkAuth
 
 export default router;

@@ -7,7 +7,7 @@ const bookingSchema = new mongoose.Schema({
     bookedSeats: { type: Array, required: true },
     isPaid: { type: Boolean, default: false },
     paymentLink: { type: String },
-    foods: [
+    foods: [  //array of food items id with quantity
     {
         food: { type: mongoose.Schema.Types.ObjectId, ref: 'Food' },
         quantity: { type: Number, default: 1 }

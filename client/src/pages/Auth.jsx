@@ -23,7 +23,7 @@ const Auth = () => {
   } = useForm();
 
   // ✅ Handle form submission
-  const onSubmit = async (data) => {
+  const onSubmit = async(data) => {
     try {
       let res;
       if (isLogin) {
@@ -49,13 +49,13 @@ const Auth = () => {
           Object.keys(res.payload.errors).forEach((field) => {   //Object.keys(res.payload.errors) → ["name", "email", "password"]
             setError(field, { message: res.payload.errors[field] });
           });
-
           //setError holds data like this 
           // errors = {
           //   name: { message: "Name must be at least Two characters" },
           //   email: { message: "Invalid email format" },
           //   password: { message: "Password must be at least 6 characters" }
           // }
+          
         } else {
           // Fallback global error
           setError("global", {

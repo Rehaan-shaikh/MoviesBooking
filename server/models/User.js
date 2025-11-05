@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-//Mongoose is uused to definne schema and models
+//Mongoose is uused to definne schema and models and also for ...
 
 const userSchema = new mongoose.Schema({
   //_id: {type: String, required: true},  mongo db automatically creates _id

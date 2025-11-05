@@ -32,7 +32,7 @@ export const loginUser = createAsyncThunk(
       const response = await axios.post(
         "http://localhost:3000/api/auth/login",
         formData,
-        { withCredentials: true } // 🔥 cookie will be stored in browser
+        { withCredentials: true } // 🔥 this line accepts the cookie header send by res.cookie from server , and stored in browser
       );
       return response.data;
     } catch (error) {

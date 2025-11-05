@@ -18,7 +18,6 @@ const loginSchema = z.object({
 export const signup = async (req, res) => {
   try {
     // ✅ validate input with zod
-    
     const parseResult = signupSchema.safeParse(req.body);  //safeParse is a zod function, checks values against schema and returns result
     // const req.body = {
     //   name: "R",           // too short, min 2 characters

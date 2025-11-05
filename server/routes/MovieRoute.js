@@ -3,6 +3,9 @@ import { getFavourites, getMovieShowDetails, toggleFavourite } from "../controll
 
 const router = express.Router();
 
+
+
+//this are router endpoints for rest api group together for movies req
 router.get("/getMovieShowDetails/:id" , getMovieShowDetails);
 router.get("/favourate", getFavourites);
 router.post("/toggleFav/:movieId", toggleFavourite);

@@ -24,15 +24,15 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-//API routes
+//Rest api, but a very simple one
 app.get("/",(req , res)=>{
     res.send("Hello World!");
 })
 
-//setting up routes 
-app.use("/api/auth", authRoutes);
+//These are REST API route groups
+app.use("/api/auth", authRoutes); 
 app.use("/api/show", showRoutes);
-app.use("/api/movies" , movieRoutes);
+app.use("/api/movies" , movieRoutes);  //go to this to know wat this r called
 app.use("/api/booking" , bookingRoutes);
 app.use("/api/admin",adminRoutes);
 app.use("/api/food",foodRoutes);
@@ -42,3 +42,11 @@ app.use("/api/search", showRoutes);
 app.listen(port,()=>{
     console.log(`Server is running on http://localhost:${port}`);
 });
+
+
+// Your index.js is just the entry point. You don’t write all REST API endpoints there because your project is big.
+// Instead, you:
+// Group related endpoints in separate files (authRoutes, movieRoutes, etc.).
+// Use app.use("/api/...") to tell Express: “All requests to this path should go to this route file.”
+// Each route file then contains the actual REST API endpoints (GET, POST, DELETE, etc.) for that resource.
+// So yes, you are using REST APIs, just in a modular way to keep your code clean and manageable.

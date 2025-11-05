@@ -4,9 +4,9 @@ function CheckAuth({ isAuthenticated,isLoading , user, children }) {
   const location = useLocation();
 
   
-  if (isLoading) {
-    return <div className="text-center mt-10">Checking authentication...</div>;
-  }
+  // if (isLoading) {
+  //   return <div className="text-center mt-10">Checking authentication...</div>;
+  // }
 
   const publicRoutes = ["/", "/login"];
 
