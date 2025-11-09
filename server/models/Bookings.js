@@ -4,9 +4,9 @@ const bookingSchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     show: { type: mongoose.Schema.Types.ObjectId, ref: 'Show', required: true },
     amount: { type: Number, required: true },
-    bookedSeats: { type: Array, required: true },
-    isPaid: { type: Boolean, default: false },
-    paymentLink: { type: String },
+    bookedSeats: { type: Array, required: true },  
+    isPaid: { type: Boolean, default: false },  
+    paymentLink: { type: String }, //after integrating payment gateway
     foods: [  //array of food items id with quantity
     {
         food: { type: mongoose.Schema.Types.ObjectId, ref: 'Food' },

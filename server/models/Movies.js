@@ -9,8 +9,8 @@ const movieSchema = new mongoose.Schema({
   release_date: { type: String, required: true },
   original_language: { type: String },
   tagline: { type: String },
-  genres: [{ type: String, required: true }],
-  casts: { type: Array, required: true },
+  genres: [{ type: String, required: true }], // array of strings
+  casts: { type: Array, required: true }, // array to hold cast members
   vote_average: { type: Number, required: true },
   runtime: { type: Number, required: true },
   

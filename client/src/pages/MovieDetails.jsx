@@ -8,9 +8,10 @@ import ReactPlayer from "react-player/youtube";
 import { toast } from "react-toastify";
 
 const MovieDetails = () => {
-  const { id } = useParams();
+  const params = useParams();
+  const id = params.id;
   const [show, setShow] = useState(null);
-  const [dateTime, setDateTime] = useState({});
+  // const [dateTime, setDateTime] = useState({});
   const [trailerUrl, setTrailerUrl] = useState("");
   const [showTrailer, setShowTrailer] = useState(false);
   const [isFavourite, setIsFavourite] = useState(false); // ❤️ Track favourite state
@@ -21,14 +22,17 @@ const MovieDetails = () => {
       const res = await axios.get(
         `http://localhost:3000/api/movies/getMovieShowDetails/${id}`
       );
+      console.log(res.data);
+      // returns {success: true, movie: {…}, dateTime: {…}}
+      // contains movie data and available dates for the show of that movie
       setShow(res.data);
-      setDateTime(res.data.dateTime || {});
+      // setDateTime(res.data.dateTime || {});
     } catch (error) {
       console.error("Error fetching show details:", error);
     }
   };
 
-  // ✅ Fetch user's favourite status for this movie
+  // ✅ set user's favourite status for this movie
   const checkIfFavourite = async () => {
     try {
       const res = await axios.get(`http://localhost:3000/api/movies/favourate`,
@@ -36,9 +40,9 @@ const MovieDetails = () => {
       );
       // console.log(res.data);
       
-      const favMovies = res.data?.favourites || [];
-      const exists = favMovies.some((fav) => fav.tmdb_id === id);
-      setIsFavourite(exists);
+      const favMovies = res.data?.favourites || [];  // array of favourite movies
+      const isExists = favMovies.some((fav) => fav.tmdb_id === id);
+      setIsFavourite(isExists);
     } catch (error) {
       console.error("Error checking favourites:", error);
     }
@@ -66,13 +70,14 @@ const MovieDetails = () => {
       const res = await axios.get(
         `https://api.themoviedb.org/3/movie/${tmdb_id}/videos?api_key=${import.meta.env.VITE_TMDB_API_KEY}`
       );
-
+      // console.log(res.data.results); //array of videos or clips 
+      
       const trailer = res.data.results.find(
         (vid) => vid.type === "Trailer" && vid.site === "YouTube"
       );
 
       if (trailer) {
-        setTrailerUrl(`https://www.youtube.com/watch?v=${trailer.key}`);
+        setTrailerUrl(`https://www.youtube.com/watch?v=${trailer.key}`);  //url from youtube and key from tmdb
         setShowTrailer(true);
       } else {
         toast("No official trailer found 😢");
@@ -97,7 +102,7 @@ const MovieDetails = () => {
       </div>
     );
   }
-  console.log(show);
+  // console.log(show);
   const movie = show.movie || {};
   // console.log(movie);
   
@@ -205,7 +210,7 @@ const MovieDetails = () => {
         </>
       )}
 
-      <DateSelect dateTime={dateTime} id={id} />
+      <DateSelect dates={show.availableDate} id={id}/>
 
       {/* 🎥 Trailer Modal */}
       {showTrailer && (

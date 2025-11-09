@@ -84,7 +84,7 @@ const RouterWrapper = () => {
     )
   );
 
-  return router;
+  return router; //return the router instance
 };
 
 export default RouterWrapper;

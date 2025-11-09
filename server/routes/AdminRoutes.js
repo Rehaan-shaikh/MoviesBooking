@@ -1,6 +1,6 @@
 import express from "express";
 import { dashboardData } from "../controller/AdminDashboard.js";
-import { listBookings, listShows } from "../controller/ListShowsController.js";
+import { listBookings, listShows } from "../controller/ListingController.js";
 
 const router = express.Router();
 

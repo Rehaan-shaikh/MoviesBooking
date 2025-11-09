@@ -7,10 +7,13 @@ import {
   ListIcon,
   PlusSquareIcon,
   Search,
+  User,
+  UserCircle,
 } from "lucide-react";
 // import { assets } from "../../assets/assets";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+
 import { checkAuth, logoutUser } from '../../store/authSlice';
 
 
@@ -30,6 +33,7 @@ const AdminSidebar = () => {
       window.location.reload();
     });
   };
+  
   const adminNavLinks = [
     { name: "Dashboard", path: "/admin", icon: LayoutDashboardIcon },
     { name: "Add Shows", path: "/admin/add-shows", icon: PlusSquareIcon },
@@ -46,11 +50,7 @@ const AdminSidebar = () => {
         max-w-13 md:max-w-60 w-full border-r border-gray-300/20 text-sm" 
     >
       <div className='h-[78vh]'>
-              <img
-        className="h-9 md:h-14 w-9 md:w-14 rounded-full mx-auto"
-        // src={user.imageUrl}
-        alt="sidebar"
-      />
+        <UserCircle className='w-8 h-8 text-gray-400 mx-auto'/>
       <div className="flex flex-col items-center justify-center mt-2 text-base max-md:hidden">
         <div>{user.name.split(" ")[0]}</div>
         <div> {user.email}</div>
@@ -62,7 +62,7 @@ const AdminSidebar = () => {
             key={index}
             to={link.path}
             end
-            className={({ isActive }) =>
+            className={({ isActive }) => //NavLink parameter: isActive
               "relative flex items-center gap-2 w-full py-2.5 min-md:pl-10 " +
               (index === 0 ? "first:mt-6 " : "") +
               "text-gray-400 group " +

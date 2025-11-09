@@ -4,8 +4,8 @@ import Title from "./component/Title";
 import { kConverter } from "../../Lib/kConverter";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { addShow } from "../../store/admin/show-slice";
 import { toast } from "react-toastify";
+import { addShow } from "../../store/showSlice";
 
 //REFER FOR UNDERSTANDING THIS CODE:
 // https://chatgpt.com/share/68e68f8a-ba18-8007-abd9-8a4a41ea9532
@@ -18,7 +18,7 @@ const AddShow = () => {
   const [dateTimeSelection, setDateTimeSelection] = useState({});
   const [dateTimeInput, setDateTimeInput] = useState("");
   const [showPrice, setShowPrice] = useState("");
-  const [showsInput, setShowsInput] = useState([
+  const [showsInput, setShowsInput] = useState([  //array of objects with date and time
     {
       date: "",
       time: [],
@@ -29,15 +29,13 @@ const AddShow = () => {
     await axios
       .get("http://localhost:3000/api/show/now-playing")
       .then((response) => {
-        // console.log(response);
-        //date dekko change karne ka tha mereko
         setNowPlayingMovies(response.data?.movies || []); // store fetched data in state
         // console.log(nowPlayingMovies);
       })
       .catch((error) => {
         console.error("Error fetching users:", error);
       });
-    // setNowPlayingMovies(dummyShowsData);
+    // setNowPlayingMovies([]);
     setIsLoading(false);
   };
 
@@ -91,21 +89,21 @@ const AddShow = () => {
     setDateTimeSelection((prev) => {
       const filteredTimes = prev[date].filter((t) => t !== time);
 
-      if (filteredTimes.length === 0) {
+      if (filteredTimes.length === 0) {                       
         //ie if a perticular date doesnt have any longer time of show,
         //this below line then,
         // 1. [date] → dynamically uses the value of the variable date as a key.
-        // So [date] becomes "2025-10-09".
+        // So [date] for ex becomes "2025-10-09".
         // 2. { [date]: _, ...rest } = prev
         // This destructures the object prev.
         // It extracts the property with key "2025-10-09" and assigns it to _ (we don’t need it, so _ is just a throwaway variable).
         // ...rest collects all remaining properties of the object into a new objec
         const { [date]: _, ...rest } = prev;
-        return rest;
+        return rest;  //return the rest which sets the dateTimeSelection state
       }
 
       return {
-        //it gets return if the data has some some time of show
+        //it gets return if the data has some time of show
         ...prev,
         [date]: filteredTimes,
       };
@@ -215,7 +213,7 @@ const AddShow = () => {
       rounded-lg"
         >
           <input
-            type="datetime-local"
+            type="datetime-local" //include both date and time picker
             value={dateTimeInput}
             onChange={(e) => setDateTimeInput(e.target.value)}
             className="outline-none
@@ -232,7 +230,7 @@ const AddShow = () => {
         </div>
       </div>
 
-      {Object.keys(dateTimeSelection).length > 0 && ( //Object.keys returns an array of keys
+      {Object.keys(dateTimeSelection).length > 0 && ( //Object.keys returns an array of keys ie date here
         <div className="mt-6">
           <h2 className="mb-2">Selected Date-Time</h2>
           <ul className="space-y-3">

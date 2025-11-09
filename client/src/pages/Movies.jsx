@@ -2,14 +2,14 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BlurCircle from "../components/BlurCircle";
 import MovieCard from "../components/MovieCard";
-import { getActiveShows } from "../store/admin/show-slice";
+import { getActiveShowsForUsers } from "../store/showSlice";
 
 const Movies = () => {
   const dispatch = useDispatch();
-  const { shows, isLoading } = useSelector((state) => state.shows);
+  const { shows, isLoading } = useSelector((state) => state.shows);  //shows here are the array of movies
 
   useEffect(() => {
-    dispatch(getActiveShows());
+    dispatch(getActiveShowsForUsers());  //this will actually fetch the movies which has their active shows 
   }, [dispatch]);
 
   if (isLoading) {
@@ -19,7 +19,8 @@ const Movies = () => {
       </div>
     );
   }
-
+  // console.log(shows);
+  
   return shows && shows.length > 0 ? (
     <div
       className="relative my-40 mb-60 px-6 md:px-16 lg:px-40 xl:px-44

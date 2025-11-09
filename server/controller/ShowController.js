@@ -23,19 +23,23 @@ export const getNowPlayingMovies = async (req, res) => {
 export const addShow = async (req, res) => {
   try {
     const { movieId, showsInput, showPrice } = req.body;
-
+    console.log(movieId);
+    
     let movie = await Movie.findOne({ tmdb_id: movieId });
 
     if (!movie) {
       // Fetch movie details and credits from TMDB API
       const [movieDetailsResponse, movieCreditsResponse] = await Promise.all([
         axios.get(`https://api.themoviedb.org/3/movie/${movieId}`, {
-          headers: { Authorization: `Bearer ${process.env.ACCESS_TOKEN}` },
-        }),
+        headers: {
+          Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+        },}),
 
-        axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {
-          headers: { Authorization: `Bearer ${process.env.ACCESS_TOKEN}` },
-        }),
+        axios.get(`https://api.themoviedb.org/3/movie/${movieId}/credits`, {  //for casts
+        headers: {
+          Authorization: `Bearer ${process.env.ACCESS_TOKEN}`,
+        },
+       }),
       ]);
 
       const movieApiData = movieDetailsResponse.data;
@@ -86,6 +90,7 @@ export const addShow = async (req, res) => {
         });
       });
     });
+    
 
     if (showsToCreate.length > 0) {
       await Show.insertMany(showsToCreate);
@@ -100,31 +105,52 @@ export const addShow = async (req, res) => {
   }
 };
 
-export const getActiveShows = async (req, res) => {
+// Get all active movies with their show time for admin dashboard
+export const getActiveShowsForAdmin = async (req, res) => {
   try {
+    // 1️⃣ Fetch all upcoming shows and populate movie details
     const shows = await Show.find({ showDateTime: { $gte: new Date() } })
       .populate("movie")
-      .sort({ showDateTime: 1 }); //dont return the past shows
-    // shows is an array of show documents you fetched from MongoDB. Each show document contains a reference to a movie document through the movie field.
-    const moviesArray = shows.map((show) => show.movie);
-    // console.log(moviesArray);  //This takes only the movie object from each show:
+      .sort({ showDateTime: 1 });
 
-    //A Set in JavaScript is a collection of unique values. By converting the moviesArray to a Set, you automatically filter out any duplicate movie entries, ensuring that each movie appears only once in the final output.
-    const uniqueShows = new Set(moviesArray);
-    res.json({ success: true, shows: Array.from(uniqueShows) });
+      // console.log(shows);
+      
+    // 2️⃣ Group all shows by movie where each movie has an array of its showtimes and prices
+    const movieShowsMap = {};
+
+    shows.forEach((show) => {
+      const movieId = show.movie._id.toString();
+      if (!movieShowsMap[movieId]) {
+        movieShowsMap[movieId] = {
+          movie: show.movie,
+          showTimes: [],
+        };
+      }
+      movieShowsMap[movieId].showTimes.push({  //if movie already exists, just push the showtime and price to showTimes array
+        _id: show._id,
+        showDateTime: show.showDateTime,
+        showPrice: show.showPrice,
+      });
+    });
+
+    // 3️⃣ Convert grouped data to array
+    const formattedShows = Object.values(movieShowsMap);
+
+    res.json({ success: true, shows: formattedShows });
   } catch (error) {
     console.error(error);
     res.json({ success: false, message: error.message });
   }
 };
 
-// Get shows for a specific movie on a specific date
-export const getMovieShowsByDate = async (req, res) => {
+
+// Get shows times by date
+export const getShowsTimingByDate = async (req, res) => {
   try {
     const { movieId, date } = req.params;
     // console.log(movieId, date, "aaaaaaaa");
 
-    // ✅ Correct key name (tmdb_id)
+    //find the movie by tmdb_id
     const movie = await Movie.findOne({ tmdb_id: movieId });
     if (!movie) {
       return res.status(404).json({ message: "Movie not found" });
@@ -132,27 +158,30 @@ export const getMovieShowsByDate = async (req, res) => {
 
     // ✅ Date range search for that entire day
     const startOfDay = new Date(date);
+    startOfDay.setUTCHours(0, 0, 0, 0);
+
     const endOfDay = new Date(date);
-    endOfDay.setHours(23, 59, 59, 999);
+    endOfDay.setUTCHours(23, 59, 59, 999);
+
 
     const shows = await Show.find({
       movie: movie._id,
       showDateTime: { $gte: startOfDay, $lte: endOfDay },
     }).sort({ showDateTime: 1 });
 
+    console.log(shows);
+
     const timings = shows.map((show) => ({
       time: show.showDateTime,
       showId: show._id,
       price: show.showPrice,
     }));
-
+    console.log(timings);
+    
 
     // ✅ No formattedMovie defined — return full movie
     res.status(200).json({
-      movie,
-      showTimings: {
-        [date]: timings,
-      },
+      dateTime : timings
     });
   } catch (err) {
     console.error("Error fetching movie shows by date:", err);
@@ -188,3 +217,39 @@ export const searchMoviesByTitle = async (req, res) => {
   }
 };
 
+//getting active movies which has (shows) for users
+export const getActiveShowsForUsers = async (req, res) => {
+  try {
+    const shows = await Show.find({ showDateTime: { $gte: new Date() } })
+      .populate("movie")
+      .sort({ showDateTime: 1 }); //dont return the past shows
+    // shows is an array of show documents you fetched from MongoDB. Each show document contains a reference to a movie document through the movie field.
+    
+    const moviesArray = shows.map((show) => show.movie);
+    // console.log(moviesArray);  //This takes only the movie object from each show:
+
+    //A Set in JavaScript is a collection of unique values. By converting the moviesArray to a Set, you automatically filter out any duplicate movie entries, ensuring that each movie appears only once in the final output.
+    const uniqueShows = new Set(moviesArray);
+    res.json({ success: true, shows: Array.from(uniqueShows) });
+  } catch (error) {
+    console.error(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+
+export const getOccupiedSeats = async (req, res)=>{
+  try {
+    const { showId } = req.params;
+    const showData = await Show.findById(showId);
+    console.log(showData.occupiedSeats);
+    
+    const occupiedSeats = Object.keys(showData.occupiedSeats);
+    console.log(occupiedSeats);
+
+    res.json({success: true, occupiedSeats});
+  } catch (error) {
+    console.log(error.message);
+    res.json({success: false, message: error.message});
+  }
+}

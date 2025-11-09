@@ -19,21 +19,18 @@ export const getMovieShowDetails = async (req, res) => {
       showDateTime: { $gte: new Date() }, // only future shows
     }).sort({ showDateTime: 1 });
 
-    // 3️⃣ Group shows by date (for DateSelect)
-    const dateTime = {};
-    shows.forEach((show) => {
-      const date = show.showDateTime.toISOString().split("T")[0]; // e.g., '2025-10-09'
-      const time = show.showDateTime.toISOString().split("T")[1].slice(0, 5); // e.g., '18:30'
-      if (!dateTime[date]) dateTime[date] = [];
-      dateTime[date].push(time);
-    });
+    // 3️⃣ Group shows by date for a spesefic movie (for DateSelect)
+    const dates = [...new Set(
+      shows.map(show => show.showDateTime.toISOString().split("T")[0])
+    )];
+
 
 
     // 4️⃣ Send combined response
     res.json({
       success: true,
       movie,
-      dateTime, // { "2025-10-09": ["18:30", "20:00"], "2025-10-10": ["17:15"] }
+      availableDate:dates, // { "2025-10-09": ["18:30", "20:00"], "2025-10-10": ["17:15"] }
     });
   } catch (error) {
     console.error(error);
@@ -56,6 +53,7 @@ export const toggleFavourite = async (req, res) => {
     // 🧩 Step 1: currentUser is a Mongoose Document instance
     // When we use `User.findById()`, it returns a Mongoose document — not a plain JS object.
     // This document is linked to the `User` model and the `users` collection in MongoDB.
+    // we can now modify its fields and call `.save()` on it.
     // It knows which collection it belongs to, its own _id, and tracks field changes automatically.
     const currentUser = await User.findById(user._id);
 

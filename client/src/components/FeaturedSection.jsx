@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
 import MovieCard from "./MovieCard";
 import { useDispatch, useSelector } from "react-redux";
-import { getActiveShows } from "../store/admin/show-slice";
+import { getActiveShowsForUsers } from "../store/showSlice";
 
 
 const FeaturedSection = () => {
@@ -13,10 +13,10 @@ const FeaturedSection = () => {
     const dispatch = useDispatch();
 
     const { shows, isLoading } = useSelector((state) => state.shows);
-    console.log(shows,"gtr");
+    // console.log(shows,"gtr");
 
     useEffect(() => {
-    dispatch(getActiveShows());
+    dispatch(getActiveShowsForUsers());
   }, [dispatch]);
 
   return (
@@ -34,8 +34,7 @@ const FeaturedSection = () => {
       </div>
 
       {/* your movie cards will go here (improve the styling from gird to flex box(responsiveness issue) 1.32.18) */}
-        <div className="flex flex-wrap max-sm:justify-center gap-8
-    mt-8">
+        <div className="flex flex-wrap max-sm:justify-center gap-8 mt-8">
         {shows.slice(0, 4).map((show) => (
             <MovieCard key={show._id} movie={show} />
         ))}

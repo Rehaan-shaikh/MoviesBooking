@@ -26,19 +26,29 @@ const SeatLayout = () => {
 
   const navigate = useNavigate();
 
-  // 🎬 Fetch show info
-  const getShow = async () => {
+  // 🎬 Fetch show timings for each  show on perticular date along with showId and showPrice
+  const getShowTimings = async () => {
     const foundShow = await axios.get(
       `http://localhost:3000/api/show/shows/${id}/${date}`
     );
+    // console.log(foundShow);
+    
 
     if (foundShow) {
       setShow({
-        movie: foundShow.data.movie,
-        dateTime: foundShow.data.showTimings,
+        dateTime: foundShow.data.dateTime,
       });
     }
   };
+  // console.log(show);
+  //CONTAINS DATA LIKE THIS:
+  //dateTime:[
+  // {time: '2025-11-28T16:23:00.000Z', showId: '690f36d73b78b44ca8591388', price: 200}
+  // {time: '2025-11-28T19:26:00.000Z', showId: '690f370d3b78b44ca85913a8', price: 150} 
+  // ]
+  const timingsForDate = show?.dateTime || [];  //used to render available timings
+
+  
 
   // 🍔 Fetch food items
   const getFoods = async () => {
@@ -59,7 +69,7 @@ const SeatLayout = () => {
     if (!selectedSeats.includes(seatId) && selectedSeats.length >= 5) {
       return toast("You can select up to 5 seats only");
     }
-
+    // Toggle seat selection
     setSelectedSeats((prev) =>
       prev.includes(seatId)
         ? prev.filter((seat) => seat !== seatId)
@@ -71,7 +81,7 @@ const SeatLayout = () => {
   const getOccupiedSeats = async () => {
     try {
       const { data } = await axios.get(
-        `http://localhost:3000/api/booking/seats/${selectedTime.showId}`
+        `http://localhost:3000/api/show/seats/${selectedTime.showId}`
       );
 
       if (data.success) {
@@ -83,6 +93,12 @@ const SeatLayout = () => {
       console.log(error);
     }
   };
+
+  // console.log(selectedFoods);
+  //Array of objects: 
+  // {foodId: '690f0ed56bac2e54bb88985b', quantity: 1}
+  // {foodId: '68f33b53ea7929f8181a6db1', quantity: 2}
+    
 
   // ✅ Book ticket with selected foods
   const BookTicket = async () => {
@@ -101,8 +117,8 @@ const SeatLayout = () => {
         `http://localhost:3000/api/booking/create`,
         {
           showId: selectedTime.showId,
-          selectedSeats,
-          foods: selectedFoods, // 👈 Added this field
+          selectedSeats, //array of seatIds
+          foods: selectedFoods, // array of objects { foodId, quantity }
         },
         { withCredentials: true }
       );
@@ -120,12 +136,13 @@ const SeatLayout = () => {
   };
 
   useEffect(() => {
-    getShow();
+    getShowTimings();
     getFoods();
   }, []);
 
   useEffect(() => {
-    if (selectedTime) getOccupiedSeats();
+    if (selectedTime) 
+      getOccupiedSeats();
   }, [selectedTime]);
 
   if (!show) {
@@ -135,10 +152,8 @@ const SeatLayout = () => {
       </div>
     );
   }
-  console.log(show.dateTime);
   
-  const timingsForDate = show.dateTime?.[date] || [];
-
+  // functionality to render seats layout (used gpt for this)
   const renderSeats = (row, count = 9) => (
     <div key={row} className="flex flex-col md:flex-row mt-2">
       <div className="flex flex-wrap items-center justify-center gap-2">
@@ -170,7 +185,12 @@ const SeatLayout = () => {
     <div className="flex flex-col md:flex-row px-16 lg:px-40 py-10 md:pt-50">
       {/* 🎞 Available Timings */}
       <div className="w-70 bg-primary/10 border border-primary/20 rounded-lg p-10 h-max sticky md:top-30">
-        <p className="text-lg font-semibold px-6">Available Timings</p>
+      <p className="text-lg font-semibold px-6">
+        Available Timings for date :{" "}
+        {timingsForDate.length > 0
+          ? timingsForDate[0].time.split("T")[0]
+          : "No timings available"}
+      </p>
         <div className="mt-5 space-y-1">
           {timingsForDate.length > 0 ? (
             timingsForDate.map((item) => (
@@ -211,6 +231,7 @@ const SeatLayout = () => {
         <img src={assets.screenImage} alt="screen" />
         <p className="text-gray-400 text-sm mb-6">SCREEN SIDE</p>
 
+        {/* rendering seat Layout */}
         <div className="flex flex-col items-center mt-10 text-gray-300">
           <div className="grid grid-cols-2 md:grid-cols-1 gap-8 md:gap-2 mb-6">
             {groupRows[0].map((row) => renderSeats(row))}

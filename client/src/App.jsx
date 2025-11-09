@@ -14,11 +14,12 @@ const App = () => {
     dispatch(checkAuth());
   }, [dispatch]);
 
-  const router = RouterWrapper();
+  const router = RouterWrapper();  //the router instance
 
     return (
       <div>
-        <RouterProvider router={router} />
+        {/* enabling routing for entire app */}
+        <RouterProvider router={router} />  
         <ToastContainer />
       </div>
     )

@@ -26,7 +26,7 @@ export const signup = async (req, res) => {
     // };
 
     if (!parseResult.success) {
-      console.log(parseResult);
+      // console.log(parseResult);
 
       // Convert Zod errors to an object keyed by field
       const fieldErrors = {};
@@ -34,7 +34,7 @@ export const signup = async (req, res) => {
         const fieldName = err.path[0] || "global";
         fieldErrors[fieldName] = err.message;
       });
-      console.log(fieldErrors);
+      // console.log(fieldErrors);
       
       return res.status(400).json({ success: false, errors: fieldErrors });
     }
@@ -92,15 +92,15 @@ export const login = async (req, res) => {
     const token = jwt.sign(
       { id: user._id, email: user.email, role: user.role },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: "1h" }
     );
 
-    // Set cookie
+    // Set cookie in response
     res.cookie("token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production", // true in production
       sameSite: "Strict",
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      maxAge: 60 * 60 * 1000, // 1 hour 
     });
 
     res.status(200).json({ success: true, user });

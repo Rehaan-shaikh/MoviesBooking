@@ -15,7 +15,7 @@ export const listBookings = async (req, res) => {
     const bookings = await Booking.find().populate([
       { path: "user", select: "name" },
       { path: "show", populate: { path: "movie" } },
-      { path: "foods", populate: { path: "food", select: "name price image" } },
+      { path: "foods", populate: { path: "food", select: "name price" } },
     ]);
     res.json(bookings);
   } catch (error) {

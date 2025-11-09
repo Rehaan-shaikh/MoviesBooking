@@ -7,7 +7,7 @@ const showSchema = new mongoose.Schema(
     showPrice: { type: Number, required: true },
     occupiedSeats: { type: Object, default: {} },
   },
-  { timestamps: true }
+  { timestamps: true } //automatically adds createdAt and updatedAt fields
 );
 
 const Show = mongoose.model("Show", showSchema);

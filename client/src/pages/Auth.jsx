@@ -20,7 +20,7 @@ const Auth = () => {
     reset,
     setError,
     formState: { errors },
-  } = useForm();
+  } = useForm();//zod validation is handled in backend now
 
   // ✅ Handle form submission
   const onSubmit = async(data) => {

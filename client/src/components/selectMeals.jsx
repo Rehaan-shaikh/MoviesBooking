@@ -19,16 +19,16 @@ const SelectMeals = ({ foods, selectedFoods, setSelectedFoods }) => {
   const updateQuantity = (foodId, change) => {
     setSelectedFoods((prev) => {
       const exists = prev.find((f) => f.foodId === foodId);
-
+  
       if (exists) {
         const updated = prev.map((f) =>
-          f.foodId === foodId
+          f.foodId === foodId 
             ? { ...f, quantity: Math.max(0, f.quantity + change) }
             : f
         );
         return updated.filter((f) => f.quantity > 0);
-      } else if (change > 0) {
-        return [...prev, { foodId, quantity: 1 }];
+      } else if (change > 0) {  //if food item doesn't exist then we are adding
+        return [...prev, { foodId, quantity: 1 }];   
       }
       return prev;
     });

@@ -1,6 +1,6 @@
 import express from "express";
 import upload from "../lib/multer.js";
-import { addFood, getAllFoods } from "../controller/FoodController.js";
+import { addFood, deleteFoodById, getAllFoods } from "../controller/FoodController.js";
 
 const router = express.Router();
 
@@ -14,5 +14,7 @@ router.post("/add", upload.single("image"), addFood);
 
 // 🍔 GET all foods
 router.get("/", getAllFoods);
+
+router.delete("/Delete/:id", deleteFoodById)
 
 export default router;

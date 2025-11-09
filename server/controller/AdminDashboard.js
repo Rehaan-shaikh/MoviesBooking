@@ -8,7 +8,7 @@ export const dashboardData = async (req, res) => {
 
     const activeShows = await Show.find({ showDateTime: { $gte: new Date() } });
 
-    const bookings = await Booking.find({ isPaid: true });
+    const bookings = await Booking.find();
 
     const revenue = bookings.reduce((acc, booking) => acc + booking.amount, 0);
 

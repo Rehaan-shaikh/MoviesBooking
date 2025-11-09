@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import BlurCircle from "../components/BlurCircle";
 import { dateFormat } from "../lib/dateFormat";
@@ -78,29 +77,31 @@ const MyBookings = () => {
               {/* 🍔 Food Items */}
               {item.foods && item.foods.length > 0 && (
                 <div className="mt-3">
-                  <p className="text-gray-300 font-medium mb-1">
-                    Food Items Ordered:
-                  </p>
+                  <p className="text-gray-300 font-medium mb-1">Food Items Ordered:</p>
                   <ul className="space-y-1 text-sm text-gray-400">
-                    {item.foods.map((foodItem, idx) => (
-                      <li key={idx} className="flex items-center gap-2">
-                        <img
-                          src={foodItem.food.image}
-                          alt={foodItem.food.name}
-                          className="w-8 h-8 rounded object-cover border border-primary/20"
-                        />
-                        <span className="text-white">
-                          {foodItem.food.name.trim()}
-                        </span>
-                        <span className="text-gray-400">x{foodItem.quantity}</span>
-                        <span className="ml-auto text-gray-300">
-                          ₹{foodItem.food.price}
-                        </span>
-                      </li>
-                    ))}
+                    {item.foods.map((foodItem, idx) => {
+                      if (!foodItem.food) return null; // 🚫 Skip invalid/null foods
+                      return (
+                        <li key={idx} className="flex items-center gap-2">
+                          <img
+                            src={foodItem.food?.image}
+                            alt={foodItem.food?.name}
+                            className="w-8 h-8 rounded object-cover border border-primary/20"
+                          />
+                          <span className="text-white">
+                            {foodItem.food?.name?.trim()}
+                          </span>
+                          <span className="text-gray-400">x{foodItem.quantity}</span>
+                          <span className="ml-auto text-gray-300">
+                            ₹{foodItem.food?.price}
+                          </span>
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
               )}
+
             </div>
           </div>
 
@@ -110,11 +111,6 @@ const MyBookings = () => {
               <p className="text-2xl font-semibold text-white">
                 Total ₹{item.amount}
               </p>
-              {!item.isPaid && (
-                <button className="bg-gradient-to-r from-[#ff4b5c] to-[#ff728b] px-3 py-1 text-sm rounded-full font-medium cursor-pointer text-white shadow-md">
-                  Pay Now
-                </button>
-              )}
             </div>
           </div>
         </div>

@@ -27,6 +27,7 @@ const ListShows = () => {
               <th className="p-2 font-medium pl-5">Movie Name</th>
               <th className="p-2 font-medium">Show Time</th>
               <th className="p-2 font-medium">Total Bookings</th>
+              <th className="p-2 font-medium">Price</th>
               <th className="p-2 font-medium">Earnings</th>
             </tr>
           </thead>
@@ -49,12 +50,14 @@ const ListShows = () => {
                       <div className="font-medium">{show.movie?.title}</div>
                     </div>
                   </div>
-                  {/* {show.movie?.title} */}
                 </td>
                 <td className="p-2">{dateFormat(show.showDateTime)}</td>
                 <td className="p-2">
                   {Object.keys(show.occupiedSeats || {}).length}
                 </td>
+                 <td className="p-2">
+                  {show.showPrice}
+                </td>               
                 <td className="p-2">
                   $
                   {Object.keys(show.occupiedSeats || {}).length *

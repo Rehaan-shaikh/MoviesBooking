@@ -54,3 +54,18 @@ export const getAllFoods = async (req, res) => {
     res.status(500).json({ success: false, message: "Server error while fetching foods." });
   }
 };
+
+export const deleteFoodById = async (req, res) => {
+  try {
+    const {id} = req.params;
+    
+    const deletedFood = await Food.findByIdAndDelete(id);
+    res.status(200).json({
+      success: true,
+      // name: deletedFood.name,
+    });
+  } catch (error) {
+    console.error("Error fetching foods:", error);
+    res.status(500).json({ success: false, message: "Server error while fetching foods." });
+  }
+};

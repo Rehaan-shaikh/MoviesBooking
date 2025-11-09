@@ -12,7 +12,7 @@ const Favorite = () => {
       const res = await axios.get(`http://localhost:3000/api/movies/favourate`,
         { withCredentials: true } // include cookies for auth
       );
-      console.log(res.data)
+      // console.log(res.data)
       if (res.data.success) {
         setFavourites(res.data.favourites); // 🎯 use backend response
       }
@@ -20,9 +20,9 @@ const Favorite = () => {
       console.error("Error fetching favourites:", error);
     } finally {
       setLoading(false);
-    }
-  };
-
+    } 
+    };
+    
   useEffect(() => {
     getFavourites();
   }, []);

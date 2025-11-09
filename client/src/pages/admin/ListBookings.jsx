@@ -64,11 +64,9 @@ const ListBookings = () => {
                 <td className="p-2 min-w-45 pl-5">{item.user?.name}</td>
                 <td className="p-2">{dateFormat(item.show?.showDateTime)}</td>
                 <td className="p-2">
-                  {Object.keys(item.bookedSeats || {})
-                    .map((seat) => item.bookedSeats[seat])
-                    .join(", ")}
+                  {console.log(item.bookedSeats)}
+                  {item.bookedSeats.map((seat) => seat).join(", ")}
                 </td>
-
                 <td className="p-2">
                   {(item.foods || []).map((f) => f.food?.name).join(", ")}
                 </td>

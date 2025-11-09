@@ -4,8 +4,8 @@ import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const DateSelect = ({ dateTime, id }) => {
-  // console.log(dateTime);
+const DateSelect = ({ dates, id }) => {
+  // console.log(dates);
   
   const [date, setDate] = useState(null);
   const navigate = useNavigate();
@@ -35,7 +35,7 @@ const DateSelect = ({ dateTime, id }) => {
             <span
               className="grid grid-cols-3 md:flex flex-wrap md:max-w-lg gap-4"
             >
-              {Object.keys(dateTime).map((d) => (
+              {dates.map((d) => (
                 <button
                   onClick={() => setDate(d)} // ✅ fixed here
                   key={d}
@@ -46,6 +46,7 @@ const DateSelect = ({ dateTime, id }) => {
                   <span>{new Date(d).getDate()}</span>
                   <span>
                     {new Date(d).toLocaleString("en-US", { month: "short" })}
+                    {/* converting 2025-11-28 ---> to Nov 28 */}
                   </span>
                 </button>
               ))}

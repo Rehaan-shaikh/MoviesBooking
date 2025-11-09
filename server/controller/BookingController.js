@@ -41,8 +41,7 @@ export const createBooking = async (req, res) => {
     // ✅ Get the show details
     // findbyID returns the document's instance 
     const showData = await Show.findById(showId).populate("movie");
-
-
+  
     // ✅ Calculate total meal price (if any)
     // console.log(foods);
     // [
@@ -129,24 +128,6 @@ export const createBooking = async (req, res) => {
     });
   }
 };
-
-
-
-export const getOccupiedSeats = async (req, res)=>{
-  try {
-    const { showId } = req.params;
-    const showData = await Show.findById(showId);
-    console.log(showData.occupiedSeats);
-    
-    const occupiedSeats = Object.keys(showData.occupiedSeats);
-    console.log(occupiedSeats);
-
-    res.json({success: true, occupiedSeats});
-  } catch (error) {
-    console.log(error.message);
-    res.json({success: false, message: error.message});
-  }
-}
 
 
 export const getUserBookings = async (req, res)=>{

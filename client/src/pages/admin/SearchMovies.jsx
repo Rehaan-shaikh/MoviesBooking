@@ -12,8 +12,8 @@ import Title from "./component/Title";
 import BlurCircle from "../../components/BlurCircle";
 import { kConverter } from "../../Lib/kConverter";
 import { useDispatch } from "react-redux";
-import { addShow } from "../../store/admin/show-slice";
 import { toast } from "react-toastify";
+import { addShow } from "../../store/showSlice";
 
 const SearchMovies = () => {
   const dispatch = useDispatch();
@@ -37,15 +37,13 @@ const SearchMovies = () => {
     if (query.trim() == "") {
       return setSearchResult([]);
     }
-    setSearchResult([]);
+    setSearchResult([]);  // Clear previous results before new search
     try {
       const response = await axios
-        .post("http://localhost:3000/api/search/movie-search", { query })
+        .post("http://localhost:3000/api/search/movie-search", { query })  //its not special query param, its in body like how we send formdata 
         .then((response) => {
           // console.log(response);
-          //date dekko change karne ka tha mereko
           setSearchResult(response.data?.movies || []); // store fetched data in state
-          // console.log(nowPlayingMovies);
         });
       setSearchTitle("");
       console.log(response);

@@ -15,4 +15,4 @@ export default upload;
 
 // But why to get path or buffer?
 // ANS: Cloudinary cannot directly take a File object from the browser in Node; it expects a file path or buffer/stream.
-// So you need to convert the File object to a buffer first, then call Cloudinary’s upload_stream. 
+// So you need to convert the File object to a buffer first, then call Cloudinary’s upload_stream or u can use path if stored on disk.
